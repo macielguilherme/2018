@@ -1,0 +1,3849 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configurações Avançadas - DocZ</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 12px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #aaaaaa;
+            opacity: 0.3;
+            z-index: 0;
+        }
+
+        .modal-container {
+            background: #585858;
+            padding: 5px;
+            border-radius: 5px;
+            max-width: 1600px;
+            width: 96%;
+            margin: 20px auto;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+            position: relative;
+            z-index: 1;
+        }
+
+        .modal-header {
+            background: url("https://docz.sosdocs.com.br/Docz/app/images/backgrounds/titleBg.png") repeat-x 0 0;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            border-radius: 2px;
+        }
+
+        .modal-title {
+            font-weight: bold;
+            color: #585858;
+            font-size: 13px;
+        }
+
+        .wijmo-wijdialog-titlebar-close {
+            height: 18px;
+            padding: 1px;
+            width: 19px;
+            display: inline-block;
+            outline: none;
+            text-align: left;
+            cursor: pointer;
+            text-decoration: none;
+            background: none;
+            border: none;
+            border-radius: 2px;
+        }
+
+        .wijmo-wijdialog-captionbutton .ui-icon {
+            margin: 1px;
+        }
+
+        .ui-icon {
+            width: 16px;
+            height: 16px;
+            display: block;
+            text-indent: -99999px;
+            overflow: hidden;
+            background-repeat: no-repeat;
+            background-image: url("https://docz.sosdocs.com.br/Docz/app/images/jquery_ui/ui-icons_222222_256x240.png");
+        }
+
+        .ui-icon-close {
+            background-position: -80px -128px;
+        }
+
+        .modal-content {
+            background: #fafafa;
+            height: 750px;
+            max-height: 92vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tabs-nav {
+            display: flex;
+            background: #efefef;
+            border-bottom: 1px solid #cdcdcd;
+            overflow: visible;
+            white-space: nowrap;
+            flex-wrap: nowrap;
+            align-items: center;
+            padding: 2px 0;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .tabs-nav .tab-links-wrapper {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            flex-wrap: nowrap;
+            flex: 1;
+            scroll-behavior: smooth;
+        }
+
+        .tabs-nav .tab-links-wrapper::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .tabs-nav .tab-links-wrapper::-webkit-scrollbar-track {
+            background: #e0e0e0;
+        }
+
+        .tabs-nav .tab-links-wrapper::-webkit-scrollbar-thumb {
+            background: #999;
+            border-radius: 3px;
+        }
+
+        .tab-link {
+            padding: 10px 12px;
+            cursor: pointer;
+            border-right: 1px solid #cdcdcd;
+            font-weight: bold;
+            color: #666;
+            background: #efefef;
+            font-size: 11px;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .tab-link:hover {
+            background: #e4e4e4;
+        }
+
+        .tab-link.active {
+            background: #fafafa;
+            color: #2b6893;
+            border-bottom: 2px solid #2b6893;
+        }
+
+        .tabs-nav .search-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 0 8px;
+            flex-shrink: 0;
+            background: #efefef;
+            padding-left: 10px;
+            margin-left: auto;
+            position: relative;
+        }
+
+        .tabs-nav .search-wrapper input {
+            border: 1px solid #ccc;
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 11px;
+            width: 250px;
+            background: #fff;
+            outline: none;
+            transition: border-color 0.2s, width 0.3s;
+        }
+
+        .tabs-nav .search-wrapper input:focus {
+            border-color: #2b6893;
+            width: 300px;
+        }
+
+        .tabs-nav .search-wrapper input::placeholder {
+            color: #999;
+            font-style: italic;
+        }
+
+        .tabs-nav .search-wrapper .clear-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 4px 6px;
+            border-radius: 2px;
+            color: #999;
+            display: none;
+            transition: all 0.2s;
+        }
+
+        .tabs-nav .search-wrapper .clear-btn:hover {
+            color: #c00;
+        }
+
+        .tabs-nav .search-wrapper .clear-btn.visible {
+            display: inline-block;
+        }
+
+        .search-results {
+            position: absolute;
+            top: 100%;
+            right: 8px;
+            width: 380px;
+            max-height: 340px;
+            overflow-y: auto;
+            background: #fff;
+            border: 1px solid #b9c2c8;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, .18);
+            z-index: 1000;
+            display: none;
+        }
+
+        .search-results.visible {
+            display: block;
+        }
+
+        .search-results .result-item {
+            padding: 9px 12px;
+            cursor: pointer;
+            border-bottom: 1px solid #eef1f3;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            transition: background .12s;
+        }
+
+        .search-results .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .search-results .result-item:hover,
+        .search-results .result-item.active {
+            background: #edf4f8;
+        }
+
+        .search-results .result-item .result-label {
+            font-size: 12px;
+            color: #333;
+            font-weight: 600;
+        }
+
+        .search-results .result-item .result-path {
+            font-size: 10.5px;
+            color: #7a8790;
+            font-style: italic;
+        }
+
+        .search-results .result-item .result-label mark {
+            background: #fff3a3;
+            color: #7a5c00;
+            padding: 0 1px;
+            border-radius: 2px;
+        }
+
+        .search-results .result-empty {
+            padding: 14px;
+            text-align: center;
+            color: #999;
+            font-style: italic;
+            font-size: 11.5px;
+        }
+
+        .search-target-highlight label {
+            background-color: #fff3cd;
+            color: #7a5c00;
+            border-radius: 3px;
+            padding: 1px 4px;
+            transition: background-color .25s ease;
+        }
+
+        .search-target-highlight.checkbox-item label {
+            padding: 2px 6px;
+            display: inline-block;
+        }
+
+        .form-group.search-target-highlight,
+        label.search-target-highlight,
+        .checkbox-item.search-target-highlight {
+            outline: none !important;
+            background: transparent !important;
+            animation: none !important;
+            box-shadow: none !important;
+        }
+
+        .search-target-highlight input,
+        .search-target-highlight select,
+        .search-target-highlight textarea {
+            outline: none !important;
+            background: initial !important;
+            box-shadow: none !important;
+            animation: none !important;
+        }
+
+        .no-results {
+            display: none;
+            padding: 8px 12px;
+            color: #999;
+            font-size: 11px;
+            font-style: italic;
+            flex-shrink: 0;
+        }
+
+        .no-results.visible {
+            display: inline-block;
+        }
+
+        .subtabs-nav {
+            display: none;
+            background: #f0f3f4;
+            border-bottom: 1px solid var(--docz-border);
+            padding: 0 clamp(16px, 2.4vw, 34px);
+            flex-shrink: 0;
+            overflow-x: auto;
+            white-space: nowrap;
+            align-items: stretch;
+            min-height: 42px;
+            box-shadow: inset 0 -1px 0 rgba(36, 54, 66, .04);
+            scrollbar-width: thin;
+            scrollbar-color: #aab3b9 #e5e8ea;
+        }
+
+        .subtabs-nav.visible {
+            display: flex;
+        }
+
+        .subtabs-nav .subtab-link {
+            padding: 11px 18px;
+            border: 1px solid transparent;
+            border-bottom: 2px solid transparent;
+            background: transparent;
+            color: #52616b;
+            font: inherit;
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: all 0.15s;
+            border-radius: 0;
+            position: relative;
+        }
+
+        .subtabs-nav .subtab-link:hover {
+            background: #e6ecef;
+            color: var(--docz-blue);
+        }
+
+        .subtabs-nav .subtab-link.active {
+            color: var(--docz-blue);
+            background: var(--docz-surface);
+            border-color: #d5dade;
+            border-bottom-color: var(--docz-blue);
+        }
+
+        .subtabs-nav::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .subtabs-nav::-webkit-scrollbar-track {
+            background: #e0e0e0;
+        }
+
+        .subtabs-nav::-webkit-scrollbar-thumb {
+            background: #999;
+            border-radius: 3px;
+        }
+
+        .tabs-body {
+            padding: 20px;
+            overflow-y: auto;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        .tab-pane {
+            display: none;
+            height: 100%;
+        }
+
+        .tab-pane.active {
+            display: block;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .subtab-pane {
+            display: none;
+        }
+
+        .subtab-pane.active {
+            display: block;
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .form-row-context {
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            min-width: 200px;
+            flex: 1;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 11px;
+            color: #555;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="email"],
+        .form-group select,
+        .form-group textarea {
+            border: 1px solid #ccc;
+            padding: 6px;
+            border-radius: 2px;
+            font-size: 12px;
+            color: #333;
+            background: #fff;
+        }
+
+        .form-group input:disabled {
+            background: #eee;
+            cursor: not-allowed;
+        }
+
+        .form-group .radio-group {
+            display: flex;
+            gap: 15px;
+            padding-top: 5px;
+        }
+
+        .form-group .radio-group label {
+            font-weight: normal;
+            font-size: 11px;
+            color: #444;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .form-group .radio-group input[type="radio"] {
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-auto-flow: row dense;
+            align-items: start;
+            gap: 12px 20px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 10px;
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 3px;
+            transition: background 0.2s;
+            cursor: pointer;
+            grid-column: span 1;
+        }
+
+        .checkbox-item:hover {
+            background: #f0f0f0;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            margin: 0;
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .checkbox-item input[type="checkbox"]:disabled {
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .checkbox-item label {
+            font-weight: normal;
+            margin: 0;
+            cursor: pointer;
+            font-size: 11px;
+            color: #444;
+            flex: 1;
+        }
+
+        .checkbox-item .disabled-label {
+            color: #999;
+            font-style: italic;
+        }
+
+        .param-wrapper {
+            display: grid;
+            grid-column: span 1;
+            grid-template-columns: minmax(0, 1fr);
+            align-content: start;
+            min-width: 0;
+        }
+
+        .param-wrapper>.checkbox-item {
+            grid-column: 1 / -1;
+            width: 100%;
+            min-height: 44px;
+        }
+
+        .param-wrapper>.param-card-body {
+            display: none;
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+
+        .param-wrapper.active {
+            grid-column: 1 / -1;
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .param-wrapper.active>.param-card-body {
+            display: grid;
+        }
+
+        .param-wrapper.active>.checkbox-item {
+            background: #edf4f8;
+            border: 1px solid #2b6893;
+            border-bottom: 1px solid #2b6893;
+            border-radius: 4px 4px 0 0;
+            padding: 10px 14px;
+            cursor: default;
+        }
+
+        .param-wrapper.active>.checkbox-item label {
+            color: #2b6893;
+            font-weight: bold;
+        }
+
+        .param-wrapper.active>.checkbox-item:hover {
+            background: #edf4f8;
+        }
+
+        .param-wrapper .toggle-icon {
+            font-size: 12px;
+            color: #999;
+            margin-left: auto;
+            user-select: none;
+            transition: transform 0.3s ease;
+            display: none;
+        }
+
+        .param-wrapper.active .toggle-icon {
+            display: inline-block;
+            color: #2b6893;
+        }
+
+        .param-wrapper .toggle-icon.open {
+            transform: rotate(180deg);
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 12px;
+            color: #2b6893;
+            margin: 15px 0 10px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .simple-list {
+            border: 1px solid #ccc;
+            background: #fff;
+            min-height: 80px;
+            max-height: 120px;
+            overflow-y: auto;
+            margin-top: 5px;
+            padding: 5px;
+            font-size: 11px;
+        }
+
+        .list-item {
+            padding: 6px 8px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .list-item:last-child {
+            border-bottom: none;
+        }
+
+        .list-item-text {
+            flex: 1;
+        }
+
+        .btn-remove {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #c00;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 0 5px;
+        }
+
+        .btn-remove:hover {
+            color: #a00;
+        }
+
+        .btn-docz {
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            padding: 8px 20px;
+            border-radius: 2px;
+            color: #fff;
+            border: none;
+            background-image: url("https://docz.sosdocs.com.br/Docz/app/images/ui/usualButtons.png");
+            background-repeat: repeat-x;
+        }
+
+        .greenB {
+            background-position: 0 -425px;
+            border: 1px solid #7ca82a;
+        }
+
+        .redB {
+            background-position: 0 -170px;
+            border: 1px solid #9f352b;
+        }
+
+        .dblueB {
+            background-position: 0 -680px;
+            border: 1px solid #2e6691;
+        }
+
+        .greyB {
+            background-position: 0 0;
+            border: 1px solid #999;
+            color: #555;
+        }
+
+        .dialog-footer {
+            padding: 15px;
+            background: #fafafa;
+            border-top: 1px double #ccc;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        .info-note {
+            font-size: 10px;
+            color: #888;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        .armazem-select-row {
+            display: flex;
+            gap: 5px;
+            align-items: flex-start;
+        }
+
+        .armazem-select-row select {
+            flex: 1;
+        }
+
+        :root {
+            color-scheme: light;
+            --docz-blue: #2b6893;
+            --docz-blue-dark: #205578;
+            --docz-border: #c7cdd2;
+            --docz-surface: #fafafa;
+            --docz-muted: #66717a;
+            --docz-frame: #585858;
+        }
+
+        body {
+            background: #e9edf0;
+            color: #333;
+            font-size: 13px;
+            padding: 12px;
+        }
+
+        body::before {
+            background: linear-gradient(135deg, rgba(39, 65, 82, .12), rgba(225, 231, 235, .52));
+            opacity: 1;
+        }
+
+        .modal-container {
+            background: var(--docz-frame);
+            border: 1px solid #454545;
+            border-radius: 6px;
+            padding: 5px;
+            box-shadow: 0 18px 48px rgba(20, 32, 40, .28), 0 2px 8px rgba(0, 0, 0, .18);
+            width: min(1600px, 100%);
+            max-height: calc(100vh - 24px);
+            display: flex;
+            flex-direction: column;
+            height: min(860px, calc(100dvh - 24px));
+        }
+
+        .modal-header {
+            flex: 0 0 42px;
+            height: 42px;
+            padding: 0 14px;
+            border-radius: 3px 3px 0 0;
+            background-color: #e6e8e9;
+            background-image: linear-gradient(#f4f5f5, #d9dddf);
+            border-bottom: 1px solid #c4c9cc;
+        }
+
+        .modal-title {
+            color: #46525b;
+            font-size: 14px;
+        }
+
+        .ui-icon-close {
+            position: relative;
+            background-image: none;
+            text-indent: 0;
+        }
+
+        .ui-icon-close::before {
+            content: "×";
+            position: absolute;
+            inset: -2px 0 0;
+            color: #4f5961;
+            font: 20px/16px Arial, sans-serif;
+            text-align: center;
+        }
+
+        .modal-content {
+            flex: 1 1 auto;
+            height: auto;
+            max-height: none;
+            min-height: 0;
+            overflow: hidden;
+            border-radius: 0 0 3px 3px;
+            position: relative;
+        }
+
+        .tabs-nav {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            padding: 5px 8px;
+            gap: 8px;
+            background: #eef0f1;
+            border-bottom: 1px solid var(--docz-border);
+            box-shadow: 0 2px 5px rgba(36, 54, 66, .06);
+            overflow: visible;
+            flex-wrap: nowrap;
+        }
+
+        .tabs-nav .tab-links-wrapper {
+            align-items: stretch;
+            gap: 3px;
+            scrollbar-width: thin;
+            scrollbar-color: #aab3b9 #e5e8ea;
+        }
+
+        .tab-link {
+            padding: 11px 13px 10px;
+            border: 1px solid transparent;
+            border-bottom: 2px solid transparent;
+            border-radius: 3px 3px 0 0;
+            color: #52616b;
+            font-size: 12px;
+        }
+
+        .tab-link:hover {
+            color: var(--docz-blue-dark);
+            background: #e3e9ed;
+        }
+
+        .tab-link.active {
+            color: var(--docz-blue);
+            background: var(--docz-surface);
+            border-color: #d5dade;
+            border-bottom-color: var(--docz-blue);
+        }
+
+        .tabs-nav .search-wrapper {
+            gap: 6px;
+            padding: 0 4px;
+            background: transparent;
+        }
+
+        .tabs-nav .search-wrapper input {
+            width: clamp(180px, 19vw, 270px);
+            min-height: 36px;
+            padding: 8px 11px;
+            border: 1px solid #b9c2c8;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .tabs-nav .search-wrapper input:focus,
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--docz-blue);
+            outline: 3px solid rgba(43, 104, 147, .16);
+            outline-offset: 0;
+        }
+
+        .tabs-nav .search-wrapper .clear-btn {
+            min-width: 34px;
+            min-height: 34px;
+            color: #54636c;
+            font-size: 16px;
+        }
+
+        .tabs-body {
+            padding: 24px clamp(16px, 2.4vw, 34px);
+            background: var(--docz-surface);
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+
+        .tab-pane.active {
+            overflow-x: hidden;
+            padding: 2px 2px 18px;
+            min-height: 0;
+        }
+
+        .form-row {
+            gap: 18px;
+        }
+
+        .form-row-context {
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            min-width: min(220px, 100%);
+        }
+
+        .form-group label {
+            margin-bottom: 7px;
+            color: #4e5a62;
+            font-size: 12px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="number"],
+        .form-group input[type="email"],
+        .form-group select,
+        .form-group textarea {
+            min-height: 36px;
+            padding: 8px 10px;
+            border-color: #c4cbd0;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .checkbox-grid {
+            gap: 10px 14px;
+        }
+
+        .checkbox-item {
+            min-height: 40px;
+            padding: 8px 11px;
+            border-color: #dce1e4;
+            border-radius: 4px;
+        }
+
+        .checkbox-item:hover {
+            background: #edf3f6;
+        }
+
+        .checkbox-item label {
+            font-size: 12px;
+        }
+
+        .param-wrapper.active>.checkbox-item {
+            border-radius: 4px 4px 0 0;
+            border-color: var(--docz-blue);
+            background: #edf4f8;
+        }
+
+        .dialog-footer {
+            position: sticky;
+            bottom: 0;
+            z-index: 4;
+            padding: 12px 18px;
+            background: #f1f2f3;
+            border-top: 1px solid #cbd1d5;
+        }
+
+        .btn-docz {
+            min-height: 38px;
+            padding: 9px 18px;
+            border-radius: 4px;
+            font-size: 12px;
+            transition: filter .15s ease, transform .15s ease, box-shadow .15s ease;
+        }
+
+        .btn-docz:hover {
+            filter: brightness(1.06);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, .15);
+        }
+
+        .btn-docz:active {
+            transform: translateY(1px);
+        }
+
+        .btn-docz:disabled,
+        .btn-docz[disabled] {
+            opacity: .5;
+            cursor: not-allowed;
+            filter: grayscale(.3);
+        }
+
+        .btn-docz:disabled:hover,
+        .btn-docz[disabled]:hover {
+            filter: grayscale(.3);
+            box-shadow: none;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        select:focus-visible,
+        textarea:focus-visible {
+            outline: 3px solid rgba(43, 104, 147, .32);
+            outline-offset: 2px;
+        }
+
+        .greenB { background-color: #76a52c; }
+        .redB { background-color: #a93d32; }
+        .dblueB { background-color: #2e6d9d; }
+        .greyB { background-color: #e5e7e8; }
+
+        .checkbox-item input[type="checkbox"] {
+            accent-color: var(--docz-blue);
+        }
+
+        .info-note {
+            color: var(--docz-muted);
+            font-size: 11px;
+        }
+
+        .checkbox-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-auto-flow: row dense;
+            align-items: stretch;
+            gap: 10px 14px;
+        }
+
+        .checkbox-grid>.checkbox-item,
+        .param-wrapper>.checkbox-item {
+            min-height: 44px;
+            padding: 10px 12px;
+        }
+
+        .tab-pane:not(#aba1) .form-row,
+        #aba1 .subtab-pane .form-row {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .tab-pane:not(#aba1) .form-group,
+        #aba1 .subtab-pane .form-group {
+            min-width: 0;
+            width: 100%;
+            flex: initial;
+        }
+
+        .checkbox-grid>.form-group {
+            min-width: 0;
+            width: 100%;
+        }
+
+        .tab-pane:not(#aba1) .form-group input,
+        .tab-pane:not(#aba1) .form-group select,
+        .tab-pane:not(#aba1) .form-group textarea,
+        #aba1 .subtab-pane .form-group input,
+        #aba1 .subtab-pane .form-group select,
+        #aba1 .subtab-pane .form-group textarea {
+            width: 100%;
+        }
+
+        #camposPesquisaGrid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .checkbox-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            min-width: 0;
+            min-height: 44px;
+            padding: 10px 12px;
+            background: #f7f9fa;
+            border: 1px solid #d6dde1;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .param-wrapper>.checkbox-item {
+            min-height: 44px;
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            flex: 0 0 18px;
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            align-self: center;
+        }
+
+        .checkbox-item label {
+            flex: 1 1 auto;
+            min-width: 0;
+            margin: 0;
+            line-height: 1.4;
+            cursor: pointer;
+        }
+
+        .checkbox-item:hover {
+            background: #eef3f6;
+            border-color: #bac8d1;
+        }
+
+        .checkbox-grid.project-flags-grid {
+            margin-bottom: 12px;
+        }
+
+        #camposAlternativos {
+            display: none !important;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin: 0 0 18px;
+            padding: 16px;
+            background: #fff;
+            border: 1px solid var(--docz-border);
+            border-radius: 4px;
+        }
+
+        #camposAlternativos.visible {
+            display: grid !important;
+        }
+
+        #aba3 .email-address-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .pesquisa-card-wrapper {
+            display: grid;
+            grid-column: 1 / -1;
+            grid-template-columns: minmax(0, 1fr);
+            min-width: 0;
+        }
+
+        .pesquisa-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            width: 100%;
+            padding: 12px 16px;
+            min-height: 48px;
+            border: 1px solid var(--docz-border);
+            border-radius: 4px;
+            background: #f7f9fa;
+            color: var(--docz-blue);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            text-align: left;
+            cursor: pointer;
+            transition: background .15s, border-color .15s;
+        }
+
+        .pesquisa-card-header:hover {
+            background: #eef3f6;
+            border-color: #bac8d1;
+        }
+
+        .pesquisa-card-header[aria-expanded="true"] {
+            background: #edf4f8;
+            border-color: var(--docz-blue);
+            border-bottom: 1px solid var(--docz-blue);
+            border-radius: 4px 4px 0 0;
+        }
+
+        .pesquisa-card-icon {
+            color: #687780;
+            font-size: 12px;
+            transition: transform .2s ease;
+            user-select: none;
+        }
+
+        .pesquisa-card-header[aria-expanded="true"] .pesquisa-card-icon {
+            transform: rotate(180deg);
+            color: var(--docz-blue);
+        }
+
+        .pesquisa-card-body {
+            display: none;
+            padding: 18px;
+            background: #fff;
+            border: 1px solid var(--docz-blue);
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+        }
+
+        .pesquisa-card-body.visible {
+            display: block;
+        }
+
+        .pesquisa-card-body #camposPesquisaGrid {
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 10px 14px;
+        }
+
+        .pesquisa-card-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 18px;
+            padding-top: 14px;
+            border-top: 1px solid #e0e4e7;
+        }
+
+        .param-card-body {
+            display: none;
+            grid-template-columns: minmax(0, 1fr);
+            align-content: start;
+            gap: 14px;
+            min-width: 0;
+            padding: 16px;
+            background: #ffffff;
+            border: 1px solid var(--docz-blue);
+            border-radius: 0 0 4px 4px;
+        }
+
+        .param-card-body.visible {
+            display: grid;
+        }
+
+        .param-card-body>.form-row,
+        .param-card-body>.checkbox-grid,
+        .param-card-body>.checkbox-item {
+            grid-column: 1 / -1;
+            min-width: 0;
+        }
+
+        .param-card-body .form-row {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            margin: 0;
+        }
+
+        .param-card-body .form-row .form-group {
+            min-width: 0;
+            width: 100%;
+        }
+
+        .param-card-body .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            grid-auto-flow: row dense;
+            gap: 10px 14px;
+            margin: 0;
+        }
+
+        .param-card-body .checkbox-grid>.checkbox-item {
+            grid-column: span 1;
+            min-height: 44px;
+            padding: 10px 12px;
+            border-radius: 4px;
+        }
+
+        .param-card-body .checkbox-grid:has(> .checkbox-item:only-child) {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .param-card-body .checkbox-grid:has(> .checkbox-item:only-child)>.checkbox-item {
+            grid-column: 1 / -1;
+        }
+
+        .param-card-body .checkbox-grid.cols-1 {
+            grid-template-columns: minmax(0, 1fr);
+        }
+
+        .param-card-body .checkbox-grid.cols-1>.checkbox-item {
+            grid-column: 1 / -1;
+        }
+
+        .vencimento-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+            align-items: start;
+            width: 100%;
+        }
+
+        .vencimento-grid>.form-group {
+            margin-bottom: 0;
+            min-width: 0;
+            width: 100%;
+        }
+
+        .vencimento-grid>.checkbox-item {
+            margin-top: 0;
+            grid-column: span 1;
+            width: 100%;
+        }
+
+        .docz-popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(20, 32, 40, .45);
+            backdrop-filter: blur(1px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+            animation: doczFadeIn .15s ease;
+        }
+
+        .docz-popup-overlay.visible {
+            display: flex;
+        }
+
+        @keyframes doczFadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .docz-popup {
+            background: #fafafa;
+            border: 1px solid #454545;
+            border-radius: 6px;
+            box-shadow: 0 18px 48px rgba(20, 32, 40, .38);
+            width: min(520px, 100%);
+            max-height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            animation: doczPopupIn .18s ease;
+        }
+
+        .docz-popup.docz-popup-lg {
+            width: min(620px, 100%);
+        }
+
+        .docz-popup.docz-popup-xl {
+            width: min(900px, 100%);
+        }
+
+        @keyframes doczPopupIn {
+            from { opacity: 0; transform: translateY(-8px) scale(.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .docz-popup-header {
+            flex: 0 0 42px;
+            height: 42px;
+            padding: 0 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #e6e8e9;
+            background-image: linear-gradient(#f4f5f5, #d9dddf);
+            border-bottom: 1px solid #c4c9cc;
+        }
+
+        .docz-popup-title {
+            font-weight: bold;
+            color: #46525b;
+            font-size: 14px;
+        }
+
+        .docz-popup-close {
+            background: none;
+            border: none;
+            font-size: 22px;
+            line-height: 1;
+            color: #4f5961;
+            cursor: pointer;
+            padding: 0 6px;
+            border-radius: 3px;
+            transition: background .15s, color .15s;
+        }
+
+        .docz-popup-close:hover {
+            background: rgba(0, 0, 0, .08);
+            color: #a84036;
+        }
+
+        .docz-popup-body {
+            padding: 20px 22px;
+            color: #333;
+            font-size: 13px;
+            line-height: 1.55;
+            overflow-y: auto;
+            flex: 1 1 auto;
+            min-height: 0;
+        }
+
+        .docz-popup-body p {
+            margin: 0 0 10px;
+        }
+
+        .docz-popup-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        .docz-popup-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            margin-right: 14px;
+            flex-shrink: 0;
+            font-size: 22px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .docz-popup-icon.info { background: #2e6d9d; }
+        .docz-popup-icon.success { background: #76a52c; }
+        .docz-popup-icon.warning { background: #d99b1f; }
+        .docz-popup-icon.danger { background: #a93d32; }
+
+        .docz-popup-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 0;
+        }
+
+        .docz-popup-input {
+            width: 100%;
+            min-height: 38px;
+            padding: 8px 10px;
+            border: 1px solid #c4cbd0;
+            border-radius: 4px;
+            font-size: 13px;
+            margin-top: 10px;
+            outline: none;
+            transition: border-color .15s, box-shadow .15s;
+        }
+
+        .docz-popup-input:focus {
+            border-color: var(--docz-blue);
+            outline: 3px solid rgba(43, 104, 147, .16);
+            outline-offset: 0;
+        }
+
+        .docz-popup-footer {
+            padding: 12px 18px;
+            background: #f1f2f3;
+            border-top: 1px solid #cbd1d5;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .docz-modelos-lista {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 6px;
+            border: 1px solid #d6dde1;
+            border-radius: 4px;
+            background: #fff;
+            padding: 6px;
+            max-height: 420px;
+            overflow-y: auto;
+            margin-top: 6px;
+        }
+
+        .docz-modelos-lista::-webkit-scrollbar { width: 8px; }
+        .docz-modelos-lista::-webkit-scrollbar-track { background: #eef1f3; border-radius: 4px; }
+        .docz-modelos-lista::-webkit-scrollbar-thumb { background: #aab3b9; border-radius: 4px; }
+        .docz-modelos-lista::-webkit-scrollbar-thumb:hover { background: #8a949a; }
+
+        .docz-modelo-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border: 1px solid #eef1f3;
+            border-radius: 4px;
+            cursor: pointer;
+            background: #fff;
+            font-size: 12.5px;
+            color: #333;
+            transition: background .12s, border-color .12s;
+            text-align: left;
+            font-family: inherit;
+            width: 100%;
+            min-width: 0;
+            min-height: 42px;
+        }
+
+        .docz-modelo-item:hover {
+            background: #edf4f8;
+            border-color: #b9c9d4;
+        }
+
+        .docz-modelo-item.selected {
+            background: #dceaf4;
+            border-color: var(--docz-blue);
+            color: var(--docz-blue);
+            font-weight: 600;
+        }
+
+        .docz-modelo-item .modelo-nome {
+            flex: 1 1 auto;
+            min-width: 0;
+            line-height: 1.35;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            word-break: break-word;
+        }
+
+        .docz-modelo-item .modelo-check {
+            flex: 0 0 16px;
+            font-size: 14px;
+            color: var(--docz-blue);
+            visibility: hidden;
+            text-align: center;
+        }
+
+        .docz-modelo-item.selected .modelo-check {
+            visibility: visible;
+        }
+
+        .docz-modelo-item.modelo-vazio {
+            grid-column: 1 / -1;
+            color: #999;
+            font-style: italic;
+            cursor: default;
+            justify-content: center;
+            text-align: center;
+            border-style: dashed;
+        }
+
+        .docz-modelo-item.modelo-vazio:hover {
+            background: #fff;
+            border-color: #eef1f3;
+        }
+
+        .docz-popup-subtitulo {
+            font-size: 11.5px;
+            color: #7a8790;
+            margin-top: 6px;
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 1200px) {
+            .pesquisa-card-body #camposPesquisaGrid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+
+        @media (max-width: 900px) {
+            .modal-container {
+                height: min(860px, calc(100dvh - 16px));
+                max-height: min(860px, calc(100dvh - 16px));
+            }
+
+            .subtabs-nav {
+                padding: 0 clamp(12px, 2vw, 24px);
+            }
+
+            .subtabs-nav .subtab-link {
+                padding: 10px 14px;
+                font-size: 12px;
+            }
+
+            .checkbox-grid,
+            .param-card-body .checkbox-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .param-card-body .form-row {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .param-card-body .checkbox-grid:has(> .checkbox-item:only-child),
+            .param-card-body .checkbox-grid.cols-1 {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .vencimento-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            #aba3 .email-address-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            #camposAlternativos {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            #camposPesquisaGrid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .tab-pane:not(#aba1) .form-row,
+            #aba1 .subtab-pane .form-row {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .tabs-nav {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .tabs-nav .search-wrapper {
+                width: 100%;
+                margin: 0;
+                padding: 3px 2px;
+            }
+
+            .tabs-nav .search-wrapper input,
+            .tabs-nav .search-wrapper input:focus {
+                width: 100%;
+            }
+
+            .search-results {
+                width: 100%;
+                right: 0;
+            }
+
+            .docz-modelos-lista {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        @media (max-width: 560px) {
+            body { padding: 0; }
+
+            .modal-container {
+                height: 100dvh;
+                max-height: 100dvh;
+                border-radius: 0;
+                padding: 4px;
+            }
+
+            .modal-header { padding: 0 10px; }
+            .tabs-body { padding: 16px 12px; }
+            .subtabs-nav { padding: 0 12px; }
+            .subtabs-nav .subtab-link { padding: 9px 12px; font-size: 11.5px; }
+
+            .checkbox-grid,
+            .param-card-body .checkbox-grid,
+            .param-card-body .form-row,
+            .vencimento-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            .param-card-body .checkbox-grid:has(> .checkbox-item:only-child),
+            .param-card-body .checkbox-grid.cols-1 {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            #camposAlternativos { grid-template-columns: minmax(0, 1fr); }
+            #camposPesquisaGrid { grid-template-columns: minmax(0, 1fr); }
+
+            .tab-pane:not(#aba1) .form-row,
+            #aba1 .subtab-pane .form-row {
+                grid-template-columns: minmax(0, 1fr);
+            }
+
+            #aba3 .email-address-grid { grid-template-columns: minmax(0, 1fr); }
+            .form-row { gap: 14px; }
+            .form-group { min-width: 100%; }
+            .formRow { align-items: stretch; flex-direction: column; }
+            .formRow label { min-width: 0; }
+
+            .dialog-footer {
+                padding: 10px;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .dialog-footer .btn-docz { flex: 1; padding: 8px; }
+            .pesquisa-card-actions { flex-direction: column; }
+            .pesquisa-card-actions .btn-docz { width: 100%; }
+
+            .docz-popup-footer { flex-wrap: wrap; }
+            .docz-popup-footer .btn-docz { flex: 1; }
+            .docz-popup.docz-popup-xl { width: 100%; }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                scroll-behavior: auto !important;
+                transition-duration: .01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="modal-container" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-header">
+            <span class="modal-title" id="modalTitle">Novo Projeto</span>
+            <a href="#" class="wijmo-wijdialog-titlebar-close ui-corner-all wijmo-wijdialog-captionbutton" role="button"
+                onclick="fecharModal(); return false;">
+                <span class="ui-icon ui-icon-close">close</span>
+            </a>
+        </div>
+
+        <div class="modal-content">
+            <div class="tabs-nav" id="mainTabs" role="tablist" aria-label="Categorias de configuração">
+                <div class="tab-links-wrapper" id="tabLinksWrapper">
+                    <div class="tab-link active" role="tab" aria-selected="true" tabindex="0" data-tab="aba1"
+                        onclick="openTab(event, 'aba1')"
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTab(event,'aba1')}">
+                        Dados do Projeto</div>
+                    <div class="tab-link" role="tab" aria-selected="false" tabindex="0" data-tab="aba2"
+                        onclick="openTab(event, 'aba2')"
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTab(event,'aba2')}">
+                        Solicitações (O.S.)</div>
+                    <div class="tab-link" role="tab" aria-selected="false" tabindex="0" data-tab="aba3"
+                        onclick="openTab(event, 'aba3')"
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTab(event,'aba3')}">
+                        Notificações e E-mails</div>
+                    <div class="tab-link" role="tab" aria-selected="false" tabindex="0" data-tab="aba4"
+                        onclick="openTab(event, 'aba4')"
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTab(event,'aba4')}">
+                        Prazos e Expurgo</div>
+                    <div class="tab-link" role="tab" aria-selected="false" tabindex="0" data-tab="aba5"
+                        onclick="openTab(event, 'aba5')"
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTab(event,'aba5')}">
+                        Digitalização e Assinatura</div>
+                    <div class="tab-link" role="tab" aria-selected="false" tabindex="0" data-tab="aba6"
+                        onclick="openTab(event, 'aba6')"
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTab(event,'aba6')}">
+                        Permissões Avançadas</div>
+                    <div class="tab-link" role="tab" aria-selected="false" tabindex="0" data-tab="aba7"
+                        onclick="openTab(event, 'aba7')"
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTab(event,'aba7')}">
+                        Metadados Padrão</div>
+                    <div class="tab-link" role="tab" aria-selected="false" tabindex="0" data-tab="aba8"
+                        onclick="openTab(event, 'aba8')"
+                        onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openTab(event,'aba8')}">
+                        Pesquisas</div>
+                    <div class="no-results" id="noResults" role="status" aria-live="polite">Nenhuma Configuração
+                        Encontrada</div>
+                </div>
+                <div class="search-wrapper" role="search">
+                    <input type="search" id="tabSearch" aria-label="Pesquisar configurações"
+                        placeholder="Pesquisar Configuração..." autocomplete="off" oninput="onSearchInput()"
+                        onkeydown="handleSearchKeydown(event)" onfocus="onSearchInput()">
+                    <button class="clear-btn" id="clearSearch" onclick="clearSearch()"
+                        title="Limpar pesquisa">✕</button>
+                    <div class="search-results" id="searchResults" role="listbox" aria-label="Resultados da pesquisa">
+                    </div>
+                </div>
+            </div>
+
+            <div class="subtabs-nav" id="subtabsNav" role="tablist" aria-label="Subseções"></div>
+
+            <form class="tabs-body" onsubmit="return false;">
+
+                <!-- ABA 1 -->
+                <div id="aba1" class="tab-pane active" data-subtabs='[
+    {"id":"aba1Identificacao","label":"Identificação","active":true},
+    {"id":"aba1Operacionais","label":"Parâmetros Operacionais"},
+    {"id":"aba1Comportamento","label":"Comportamento"}
+]'>
+                    <div id="aba1Identificacao" class="subtab-pane active">
+                        <div class="form-row form-row-context">
+                            <div class="form-group" style="grid-column: span 2;">
+                                <label>Nome do Projeto</label>
+                                <input type="text" id="nomeProjeto" placeholder="Nome do Projeto" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Código de Guarda</label>
+                                <input type="text" id="codigoGuarda" value="" disabled>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label>Descrição</label>
+                            <textarea id="descricao" rows="2" placeholder="Descrição do Projeto"></textarea>
+                        </div>
+
+                        <div class="checkbox-grid project-flags-grid">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="habilitarAlternativos" onclick="toggleAlternativos()">
+                                <label for="habilitarAlternativos">Habilitar Campos Alternativos</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="ativoCheck">
+                                <label for="ativoCheck">Ativo</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="principalCheck">
+                                <label for="principalCheck">Principal</label>
+                            </div>
+                        </div>
+
+                        <div class="form-row form-row-context" id="camposAlternativos">
+                            <div class="form-group"><label>ID Alternativo</label><input type="text" id="idAlternativo"
+                                    placeholder="ID Alternativo" value=""></div>
+                            <div class="form-group"><label>Nome Alternativo</label><input type="text"
+                                    id="nomeAlternativo" placeholder="Nome Alternativo" value=""></div>
+                            <div class="form-group"><label>Código de Guarda Alternativo</label><input type="text"
+                                    id="codigoGuardaAlternativo" placeholder="Código de Guarda Alternativo" value="">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="aba1Operacionais" class="subtab-pane">
+                        <div class="form-row form-row-context">
+                            <div class="form-group">
+                                <label>Limite Diário de Solicitações</label>
+                                <input type="number" id="limiteSolicitacaoDiaria" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Limite de Objetos para Indexação em Lote</label>
+                                <input type="number" id="limiteIndexacaoLote" value="">
+                            </div>
+                            <div class="form-group">
+                                <label>Fuso Horário Padrão (UTC)</label>
+                                <select id="fusoHorario">
+                                    <option value="">Selecione...</option>
+                                    <option>America/Sao_Paulo (UTC-03:00)</option>
+                                    <option>America/New_York (UTC-04:00)</option>
+                                    <option>Europe/London (UTC+01:00)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row form-row-context">
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label>Armazém</label>
+                                <div class="armazem-select-row">
+                                    <select id="armazemSelect">
+                                        <option value="">Selecione o Armazém...</option>
+                                        <option value="G1 - GUARDA CEILANDIA I - DF">G1 - Guarda Ceilândia I - DF
+                                        </option>
+                                        <option value="G2 - GUARDA CEILANDIA II - DF">G2 - Guarda Ceilândia II - DF
+                                        </option>
+                                        <option value="G3 - GUARDA TERESINA/PI">G3 - Guarda Teresina/PI</option>
+                                        <option value="G4 - GUARDA DUQUE DE CAXIAS I - RJ">G4 - Guarda Duque de Caxias I
+                                            - RJ</option>
+                                        <option value="G5 - GUARDA SIA/DF">G5 - Guarda SIA/DF</option>
+                                        <option value="G6 - GUARDA ITAPEVI - SP">G6 - Guarda Itapevi - SP</option>
+                                        <option value="G7 - GUARDA SALVADOR/BA">G7 - Guarda Salvador/BA</option>
+                                        <option value="G8 - GUARDA SERRA/ES">G8 - Guarda Serra/ES</option>
+                                    </select>
+                                    <button type="button" class="btn-docz dblueB" onclick="adicionarArmazem()"
+                                        style="padding:4px 10px;">+ Adicionar</button>
+                                </div>
+                                <div class="simple-list" id="listaArmazens"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="aba1Comportamento" class="subtab-pane">
+                        <div class="checkbox-grid">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="permitirAdicionarArquivos">
+                                <label for="permitirAdicionarArquivos">Permitir Adicionar Arquivos</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="permitirImprimirEtiquetas">
+                                <label for="permitirImprimirEtiquetas">Permitir Impressão de Etiquetas</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="compartilharPesquisa">
+                                <label for="compartilharPesquisa">Compartilhar Arquivos pela Pesquisa</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="compartilharSolicitacao">
+                                <label for="compartilharSolicitacao">Compartilhar Arquivos pela Solicitação</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="substituirFotolabel">
+                                <label for="substituirFotolabel">Substituir Arquivo de Fotolabel</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 2 -->
+                <div id="aba2" class="tab-pane" data-subtabs='[
+                    {"id":"aba2Solicitacoes","label":"Solicitações","active":true},
+                    {"id":"aba2Fluxos","label":"Fluxos e Prazos"}
+                ]'>
+                    <div id="aba2Solicitacoes" class="subtab-pane active">
+                        <div class="checkbox-grid">
+                            <div class="checkbox-item"><input type="checkbox" id="podeSolicitarCaixa"> <label>Permitir
+                                    Solicitação de Caixa</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="podeSolicitarDocumento">
+                                <label>Permitir Solicitação de Documento</label>
+                            </div>
+                            <div class="checkbox-item"><input type="checkbox" id="podeSolicitarCaixaPorDocumento">
+                                <label>Permitir Solicitação de Caixa via Documento</label>
+                            </div>
+                        </div>
+
+                        <div class="form-row form-row-context">
+                            <div class="form-group"><label>Campos da Descrição da Solicitação — Documentos</label><input
+                                    type="text" id="camposOSDocumento" placeholder="Ex: Campo1;Campo2" value=""></div>
+                            <div class="form-group"><label>Campos da Descrição da Solicitação — Caixas</label><input
+                                    type="text" id="camposOSCaixa" placeholder="Ex: CampoA;CampoB" value=""></div>
+                        </div>
+
+                        <div class="checkbox-grid" id="gridAba2">
+                            <div class="checkbox-item"><input type="checkbox" id="enviarNotificacaoOS"> <label>Enviar
+                                    Notificação de O.S.</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="obrigatoriedadeDestinatario">
+                                <label>Exigir Destinatário na Abertura da O.S.</label>
+                            </div>
+                            <div class="checkbox-item"><input type="checkbox" id="finalizarOS2Fatores"> <label>Finalizar
+                                    O.S. Digital com Dois Fatores</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="mostrarDadosTransporteOS">
+                                <label>Exibir Dados do Responsável pelo Transporte na O.S.</label>
+                            </div>
+                            <div class="checkbox-item"><input type="checkbox" id="disponibilizarRegistroFotografico">
+                                <label>Disponibilizar Registro Fotográfico no Atendimento da O.S.</label>
+                            </div>
+                            <div class="checkbox-item"><input type="checkbox" id="inserirVinculados"> <label>Inserir
+                                    Itens Vinculados na Solicitação</label></div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label>Formato de Assinatura da O.S.</label>
+                                <select id="formatoAssinaturaOS">
+                                    <option value="">Selecione...</option>
+                                    <option>Cliente</option>
+                                    <option>Projeto</option>
+                                    <option>Ambas (Cliente + Projeto)</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="aba2Fluxos" class="subtab-pane">
+                        <div class="checkbox-grid">
+                            <div class="param-wrapper" id="wrapperControlarVencimento">
+                                <div class="checkbox-item" onclick="toggleParamWrapper(this)">
+                                    <input type="checkbox" id="controlarVencimentoCheck"
+                                        onclick="event.stopPropagation(); toggleControlarVencimento()">
+                                    <label for="controlarVencimentoCheck">Controlar Vencimento de Empréstimo de
+                                        Objeto</label>
+                                    <span class="toggle-icon">▼</span>
+                                </div>
+                                <div class="param-card-body" id="controlarVencimentoFields">
+                                    <div class="vencimento-grid">
+                                        <div class="form-group">
+                                            <label>Prazo Padrão para Devolução de Objeto (em dias)</label>
+                                            <select id="prazoDevolucao">
+                                                <option value="">Selecione...</option>
+                                                <option value="7">7</option>
+                                                <option value="14">14</option>
+                                                <option value="30">30</option>
+                                                <option value="45">45</option>
+                                                <option value="60">60</option>
+                                                <option value="90">90</option>
+                                                <option value="indeterminado">Tempo Indeterminado</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Dia do Mês para Envio de Notificação de Empréstimo Vencido</label>
+                                            <select id="diaEnvioNotificacao">
+                                                <option value="">Selecione...</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                                <option value="13">13</option>
+                                                <option value="14">14</option>
+                                                <option value="15">15</option>
+                                                <option value="16">16</option>
+                                                <option value="17">17</option>
+                                                <option value="18">18</option>
+                                                <option value="19">19</option>
+                                                <option value="20">20</option>
+                                                <option value="21">21</option>
+                                                <option value="22">22</option>
+                                                <option value="23">23</option>
+                                                <option value="24">24</option>
+                                                <option value="25">25</option>
+                                                <option value="26">26</option>
+                                                <option value="27">27</option>
+                                                <option value="28">28</option>
+                                                <option value="29">29</option>
+                                                <option value="30">30</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Tempo de Inatividade para Bloqueio do Usuário (em dias)</label>
+                                            <select id="tempoBloqueioUsuario">
+                                                <option value="">Selecione...</option>
+                                                <option value="30">30</option>
+                                                <option value="60">60</option>
+                                                <option value="90">90</option>
+                                            </select>
+                                        </div>
+
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="alteracaoPrazoCheck">
+                                            <label for="alteracaoPrazoCheck">Permitir Alteração do Prazo pelo
+                                                Solicitante</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="param-wrapper" id="wrapperEtapaOSRecolhimento">
+                                <div class="checkbox-item" onclick="toggleParamWrapper(this)">
+                                    <input type="checkbox" id="alterarEtapaOSRecolhimento"
+                                        onclick="event.stopPropagation(); toggleEtapaOSRecolhimento()">
+                                    <label for="alterarEtapaOSRecolhimento">Alterar Etapa Documental após Conclusão de
+                                        O.S. de Recolhimento</label>
+                                    <span class="toggle-icon">▼</span>
+                                </div>
+                                <div class="param-card-body" id="etapaOSRecolhimentoFields">
+                                    <div class="form-row form-row-context">
+                                        <div class="form-group">
+                                            <label>Etapa Documental após Conclusão de O.S. de Recolhimento</label>
+                                            <select id="etapaDocumentalPosOSRecolhimento">
+                                                <option value="">Selecione...</option>
+                                                <option>Aguardando Aprovação</option>
+                                                <option>Aprovado</option>
+                                                <option>Finalizado</option>
+                                                <option>Arquivado</option>
+                                                <option>Cancelado</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 3 -->
+                <div id="aba3" class="tab-pane" data-subtabs='[
+                    {"id":"aba3Emails","label":"Destinatários","active":true},
+                    {"id":"aba3Alertas","label":"Integrações e Alertas"}
+                ]'>
+                    <div id="aba3Emails" class="subtab-pane active">
+                        <div class="form-row form-row-context email-address-grid">
+                            <div class="form-group"><label>E-mail do Cliente para Comunicações e
+                                    Notificações</label><input type="email" id="emailComunicacoes"
+                                    placeholder="Cliente@dominio.com" value=""></div>
+                            <div class="form-group"><label>E-mail do Cliente para Notificações de Lotes</label><input
+                                    type="email" id="emailNotificacaoLote" placeholder="Lotes@dominio.com" value="">
+                            </div>
+                            <div class="form-group"><label>E-mail da Gestão Documental</label><input type="email"
+                                    id="emailGestaoDocumental" placeholder="Gestao@dominio.com" value=""></div>
+                            <div class="form-group"><label>E-mail da Digitalização</label><input type="email"
+                                    id="emailDigitalizacao" placeholder="Digitalizacao@dominio.com" value=""></div>
+                            <div class="form-group"><label>E-mail para Notificação de Novos Arquivos</label><input
+                                    type="email" id="emailNovosArquivos" placeholder="Novosarquivos@dominio.com"
+                                    value=""></div>
+                        </div>
+                    </div>
+                    <div id="aba3Alertas" class="subtab-pane">
+                        <div class="checkbox-grid" id="gridAba3">
+                            <div class="checkbox-item"><input type="checkbox" id="verIntegracoes"> <label>Ver
+                                    Integrações</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="compartilharPacotesPreservacao">
+                                <label>Compartilhar Pacotes de Preservação</label>
+                            </div>
+
+                            <div class="param-wrapper" id="wrapperSlaNormal">
+                                <div class="checkbox-item" onclick="toggleParamWrapper(this)">
+                                    <input type="checkbox" id="notificarSlaNormalCheck"
+                                        onclick="event.stopPropagation(); toggleSlaNormal()">
+                                    <label for="notificarSlaNormalCheck">Notificar Vencimento de SLA — Prioridade
+                                        Normal</label>
+                                    <span class="toggle-icon">▼</span>
+                                </div>
+                                <div class="param-card-body" id="slaNormalFields">
+                                    <div class="form-row form-row-context">
+                                        <div class="form-group"><label>E-mail — Prioridade Normal</label><input
+                                                type="text" id="emailSlaNormal"
+                                                placeholder="Digite os E-mails separados por ;" value=""></div>
+                                        <div class="form-group"><label>Tempo de Aviso Prévio — Prioridade Normal
+                                                (Horas)</label><input type="text" id="tempoAvisoSlaNormal"
+                                                placeholder="Exemplo: 48;24;12" value=""></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="param-wrapper" id="wrapperSlaUrgente">
+                                <div class="checkbox-item" onclick="toggleParamWrapper(this)">
+                                    <input type="checkbox" id="notificarSlaUrgenteCheck"
+                                        onclick="event.stopPropagation(); toggleSlaUrgente()">
+                                    <label for="notificarSlaUrgenteCheck">Notificar Vencimento de SLA — Prioridade
+                                        Urgente</label>
+                                    <span class="toggle-icon">▼</span>
+                                </div>
+                                <div class="param-card-body" id="slaUrgenteFields">
+                                    <div class="form-row form-row-context">
+                                        <div class="form-group"><label>E-mail — Prioridade Urgente</label><input
+                                                type="text" id="emailSlaUrgente"
+                                                placeholder="Digite os E-mails separados por ;" value=""></div>
+                                        <div class="form-group"><label>Tempo de Aviso Prévio — Prioridade Urgente
+                                                (Horas)</label><input type="text" id="tempoAvisoSlaUrgente"
+                                                placeholder="Exemplo: 48;24;12" value=""></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="mostrarDadosTransporteCheck">
+                                <label for="mostrarDadosTransporteCheck">Exibir Dados do Responsável pelo Transporte na
+                                    O.S.</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 4 -->
+                <div id="aba4" class="tab-pane" data-subtabs='[
+                    {"id":"aba4Rotinas","label":"Rotinas de Expurgo","active":true},
+                    {"id":"aba4Alertas","label":"Alertas e Relatórios"}
+                ]'>
+                    <div id="aba4Rotinas" class="subtab-pane active">
+                        <div class="checkbox-grid" id="gridAba4">
+                            <div class="checkbox-item"><input type="checkbox" id="enviarRelatorioAnual"> <label>Enviar
+                                    Relatório de Expurgo Anual Automaticamente</label></div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="eliminarDadosExpurgo">
+                                <label>Eliminar Dados após Conclusão da O.S. de Expurgo</label>
+                            </div>
+                        </div>
+                        <div class="form-row form-row-context" style="margin-top: 20px;">
+                            <div class="form-group"><label>E-mail para Notificação do Relatório de Expurgo</label><input
+                                    type="email" id="emailRelatorioExpurgo" placeholder="Expurgo@dominio.com" value="">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="aba4Alertas" class="subtab-pane">
+                        <div class="checkbox-grid">
+                            <div class="param-wrapper" id="wrapperPrazoGuarda">
+                                <div class="checkbox-item" onclick="toggleParamWrapper(this)">
+                                    <input type="checkbox" id="notificarPrazoGuardaCheck"
+                                        onclick="event.stopPropagation(); togglePrazoGuarda()">
+                                    <label for="notificarPrazoGuardaCheck">Notificar Prazo de Guarda a Vencer</label>
+                                    <span class="toggle-icon">▼</span>
+                                </div>
+                                <div class="param-card-body" id="prazoGuardaFields">
+                                    <div class="form-row form-row-context">
+                                        <div class="form-group"><label>Intervalo de Alerta (em Dias)</label><input
+                                                type="text" id="intervaloAlerta" placeholder="Ex: 15;30;60" value="">
+                                        </div>
+                                        <div class="form-group"><label>Destinatários do Alerta de Prazo</label><input
+                                                type="text" id="destinatariosAlerta"
+                                                placeholder="Email1@dominio.com; Email2@dominio.com" value=""></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="param-wrapper" id="wrapperExpurgo">
+                                <div class="checkbox-item" onclick="toggleParamWrapper(this)">
+                                    <input type="checkbox" id="notificarExpurgoCheck"
+                                        onclick="event.stopPropagation(); toggleExpurgo()">
+                                    <label for="notificarExpurgoCheck">Notificar Expurgo por E-mail</label>
+                                    <span class="toggle-icon">▼</span>
+                                </div>
+                                <div class="param-card-body" id="expurgoFields">
+                                    <div class="form-row form-row-context">
+                                        <div class="form-group">
+                                            <label>Periodicidade do Envio do E-mail de Expurgo (em Dias)</label>
+                                            <input type="number" id="periodicidadeExpurgo" value="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Período Considerado no Relatório de Expurgo</label>
+                                            <div class="radio-group">
+                                                <label><input type="radio" name="periodoExpurgo" value="mensal">
+                                                    Mensal</label>
+                                                <label><input type="radio" name="periodoExpurgo" value="semestral">
+                                                    Semestral</label>
+                                                <label><input type="radio" name="periodoExpurgo" value="anual">
+                                                    Anual</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 5 -->
+                <div id="aba5" class="tab-pane" data-subtabs='[
+                    {"id":"aba5Digitalizacao","label":"Digitalização","active":true},
+                    {"id":"aba5Assinatura","label":"Assinatura, PDF/A e API"}
+                ]'>
+                    <div id="aba5Digitalizacao" class="subtab-pane active">
+                        <div class="checkbox-grid" id="gridAba5">
+                            <div class="checkbox-item"><input type="checkbox" id="armazenarDoczFileService">
+                                <label>Armazenar Documentos Digitais no Docz File Service</label>
+                            </div>
+                            <div class="checkbox-item"><input type="checkbox" id="permitirDigitalizar"> <label>Permitir
+                                    Digitalização</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="realizarChancela"> <label>Realizar
+                                    Chancela em Documentos Digitalizados</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="realizarChancelaLote"> <label>Realizar
+                                    Chancela em Lote de Documentos Digitalizados</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="marcaDaguaChancela"> <label>Adicionar
+                                    Marca D'Água em Chancela de Documentos Digitalizados</label></div>
+                        </div>
+                    </div>
+                    <div id="aba5Assinatura" class="subtab-pane">
+                        <div class="checkbox-grid">
+                            <div class="checkbox-item"><input type="checkbox" id="assinaturaCertificado">
+                                <label>Realizar Assinatura com Certificado de Usuário</label>
+                            </div>
+                            <div class="checkbox-item"><input type="checkbox" id="assinaturaCertificaLote">
+                                <label>Realizar Assinatura com Certificado de Usuário em Lote</label>
+                            </div>
+
+                            <div class="param-wrapper" id="wrapperUploadAPI">
+                                <div class="checkbox-item" onclick="toggleParamWrapper(this)">
+                                    <input type="checkbox" id="permitirUploadAPI"
+                                        onclick="event.stopPropagation(); toggleUploadAPI()">
+                                    <label for="permitirUploadAPI">Permitir Upload de um Arquivo por Documento via
+                                        API</label>
+                                    <span class="toggle-icon">▼</span>
+                                </div>
+                                <div class="param-card-body" id="uploadAPIFields">
+                                    <div class="checkbox-grid">
+                                        <div class="checkbox-item">
+                                            <input type="checkbox" id="substituirArquivoAPI">
+                                            <label for="substituirArquivoAPI">Substituir Arquivo Existente via
+                                                API</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="param-wrapper" id="wrapperPDFA">
+                                <div class="checkbox-item" onclick="toggleParamWrapper(this)">
+                                    <input type="checkbox" id="converterPDFA"
+                                        onclick="event.stopPropagation(); togglePDFA()">
+                                    <label for="converterPDFA">Converter Documentos para PDF/A</label>
+                                    <span class="toggle-icon">▼</span>
+                                </div>
+                                <div class="param-card-body" id="pdfaFields">
+                                    <div class="form-row form-row-context">
+                                        <div class="form-group">
+                                            <label>Etapa Documental de Entrada (PDF/A)</label>
+                                            <select id="etapaDocumentalEntradaPDFA">
+                                                <option value="">Selecione...</option>
+                                                <option>Aguardando Aprovação</option>
+                                                <option>Aprovado</option>
+                                                <option>Finalizado</option>
+                                                <option>Arquivado</option>
+                                                <option>Cancelado</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Etapa Documental de Saída (PDF/A)</label>
+                                            <select id="etapaDocumentalSaidaPDFA">
+                                                <option value="">Selecione...</option>
+                                                <option>Aguardando Aprovação</option>
+                                                <option>Aprovado</option>
+                                                <option>Finalizado</option>
+                                                <option>Arquivado</option>
+                                                <option>Cancelado</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 6 -->
+                <div id="aba6" class="tab-pane" data-subtabs='[
+                    {"id":"aba6Acesso","label":"Acesso e Operações","active":true},
+                    {"id":"aba6Alteracoes","label":"Alterações e Inativação"}
+                ]'>
+                    <div id="aba6Acesso" class="subtab-pane active">
+                        <div class="checkbox-grid" id="gridAba6">
+                            <div class="checkbox-item"><input type="checkbox" id="habilitarEnvioSEI"> <label>Habilitar
+                                    Envio para o SEI</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="visualizarVersoes"> <label>Visualizar
+                                    Versões</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="liberarAvaliacaoSemTipologia">
+                                <label>Permitir Liberação de Objetos para Avaliação sem Tipologia de Arquivos</label>
+                            </div>
+                            <div class="checkbox-item"><input type="checkbox" id="arquivarDesarquivar"> <label>Permitir
+                                    Arquivar e Desarquivar Documentos</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="permitirRelacionamentos">
+                                <label>Permitir Relacionamentos</label>
+                            </div>
+                            <div class="checkbox-item"><input type="checkbox" id="restringirPorDepartamento">
+                                <label>Restringir Acesso a Documentos por Departamento do Usuário</label>
+                            </div>
+                            <div class="checkbox-item"><input type="checkbox" id="exigirJustificativaAlterar">
+                                <label>Exigir Justificativa ao Alterar um Objeto</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="aba6Alteracoes" class="subtab-pane">
+                        <div class="checkbox-grid">
+                            <div class="param-wrapper" id="wrapperAlteracaoAutor">
+                                <div class="checkbox-item" onclick="toggleParamWrapper(this)">
+                                    <input type="checkbox" id="alteracaoSomenteAutorCheck"
+                                        onclick="event.stopPropagation(); toggleEtapaDocumentalAutor()">
+                                    <label for="alteracaoSomenteAutorCheck">Alteração de Objetos Somente pelo
+                                        Autor</label>
+                                    <span class="toggle-icon">▼</span>
+                                </div>
+                                <div class="param-card-body" id="etapaDocumentalAutorFields">
+                                    <div class="form-group">
+                                        <label>Etapa Documental — Alteração pelo Autor</label>
+                                        <select id="etapaDocumentalAutor">
+                                            <option value="">Selecione...</option>
+                                            <option>Aguardando Aprovação</option>
+                                            <option>Aprovado</option>
+                                            <option>Finalizado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="param-wrapper" id="wrapperInativarArquivos">
+                                <div class="checkbox-item" onclick="toggleParamWrapper(this)">
+                                    <input type="checkbox" id="inativarArquivosCheck"
+                                        onclick="event.stopPropagation(); toggleEtapaDocumentalInativar()">
+                                    <label for="inativarArquivosCheck">Inativar Arquivos</label>
+                                    <span class="toggle-icon">▼</span>
+                                </div>
+                                <div class="param-card-body" id="etapaDocumentalInativarFields">
+                                    <div class="form-group">
+                                        <label>Etapa Documental — Inativação</label>
+                                        <select id="etapaDocumentalInativar">
+                                            <option value="">Selecione...</option>
+                                            <option>Arquivado</option>
+                                            <option>Cancelado</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 7 -->
+                <div id="aba7" class="tab-pane" data-subtabs="[]">
+                    <div class="checkbox-grid" id="gridAba7">
+                        <div class="param-wrapper" id="wrapperMetadados">
+                            <div class="checkbox-item" onclick="toggleParamWrapper(this)">
+                                <input type="checkbox" id="habilitarMetadadosCheck"
+                                    onclick="event.stopPropagation(); toggleMetadados()">
+                                <label for="habilitarMetadadosCheck">Habilitar Valores Padrão para Metadados de
+                                    Arquivo</label>
+                                <span class="toggle-icon">▼</span>
+                            </div>
+                            <div class="param-card-body" id="metadadosFields">
+                                <div class="form-row form-row-context">
+                                    <div class="form-group"><label>Autor</label><input type="text" id="autorMetadado"
+                                            placeholder="Autor Padrão" value=""></div>
+                                    <div class="form-group"><label>Local da Digitalização</label><input type="text"
+                                            id="localDigitalizacao" placeholder="Local Padrão" value=""></div>
+                                    <div class="form-group"><label>Responsável pela Digitalização</label><input
+                                            type="text" id="responsavelDigitalizacao" placeholder="Responsável Padrão"
+                                            value=""></div>
+                                </div>
+                                <div class="form-row form-row-context">
+                                    <div class="form-group"><label>Local de Produção</label><input type="text"
+                                            id="localProducao" placeholder="Local de Produção Padrão" value=""></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ABA 8 -->
+                <div id="aba8" class="tab-pane" data-subtabs="[]">
+                    <div class="pesquisa-card-wrapper" id="pesquisaWrapper">
+                        <button type="button" class="pesquisa-card-header" id="pesquisaToggle" aria-expanded="false"
+                            aria-controls="pesquisaCardBody" onclick="togglePesquisaCard()">
+                            <span class="pesquisa-card-title">Pesquisa Personalizada</span>
+                            <span class="pesquisa-card-icon" aria-hidden="true">▼</span>
+                        </button>
+
+                        <div class="pesquisa-card-body" id="pesquisaCardBody">
+                            <div class="info-note" style="margin-bottom: 14px;">
+                                Selecione os campos que deseja exibir na pesquisa avançada. Campos marcados são
+                                obrigatórios e não podem ser desativados.
+                            </div>
+                            <div class="checkbox-grid" id="camposPesquisaGrid">
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoIdentificadorSOS" checked
+                                        disabled><label for="pesqCampoIdentificadorSOS"
+                                        class="disabled-label">Identificador SOS</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoLocalizacao"><label
+                                        for="pesqCampoLocalizacao">Localização</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoStatus"><label
+                                        for="pesqCampoStatus">Status</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoServico"><label
+                                        for="pesqCampoServico">Serviço</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoIdentificadorCliente"
+                                        checked disabled><label for="pesqCampoIdentificadorCliente"
+                                        class="disabled-label">Identificador Cliente</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoDescricao"><label
+                                        for="pesqCampoDescricao">Descrição</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoDepartamento"><label
+                                        for="pesqCampoDepartamento">Departamento</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoTipoObjeto"><label
+                                        for="pesqCampoTipoObjeto">Tipo de Objeto</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoLacre01"><label
+                                        for="pesqCampoLacre01">Lacre 01</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoLacre02"><label
+                                        for="pesqCampoLacre02">Lacre 02</label></div>
+                                <div class="checkbox-item"><input type="checkbox"
+                                        id="pesqCampoNumeroUltimaSolicitacao"><label
+                                        for="pesqCampoNumeroUltimaSolicitacao">Nº Última Solicitação</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoUsuario"><label
+                                        for="pesqCampoUsuario">Usuário</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoNumeroConcorrente"
+                                        checked disabled><label for="pesqCampoNumeroConcorrente"
+                                        class="disabled-label">Nº Concorrente</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoClassificacao"><label
+                                        for="pesqCampoClassificacao">Classificação</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoPaginas"><label
+                                        for="pesqCampoPaginas">Páginas</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoIdNuxeo"><label
+                                        for="pesqCampoIdNuxeo">IdNuxeo</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoVolume"><label
+                                        for="pesqCampoVolume">Volume</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoFaseIntermediaria"><label
+                                        for="pesqCampoFaseIntermediaria">Fase Intermediária</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoDestinacaoFinal"><label
+                                        for="pesqCampoDestinacaoFinal">Destinação Final</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoFaseCorrente"><label
+                                        for="pesqCampoFaseCorrente">Fase Corrente</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoObservacoes"><label
+                                        for="pesqCampoObservacoes">Observações</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoDataInicio"><label
+                                        for="pesqCampoDataInicio">Data de Início</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoEtapaIndexacao"><label
+                                        for="pesqCampoEtapaIndexacao">Etapa Indexação</label></div>
+                                <div class="checkbox-item"><input type="checkbox"
+                                        id="pesqCampoDataCatalogacaoComplementar"><label
+                                        for="pesqCampoDataCatalogacaoComplementar">Data Catalogação Complementar</label>
+                                </div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoNumeroRG"><label
+                                        for="pesqCampoNumeroRG">Número RG</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoNomePaciente"><label
+                                        for="pesqCampoNomePaciente">Nome do Paciente</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoNumeroProntuario"><label
+                                        for="pesqCampoNumeroProntuario">Nº Prontuário</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoDestino"><label
+                                        for="pesqCampoDestino">Destino</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoNumeroDossie"><label
+                                        for="pesqCampoNumeroDossie">Número do Dossiê</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoMatricula"><label
+                                        for="pesqCampoMatricula">Matrícula</label></div>
+                                <div class="checkbox-item"><input type="checkbox"
+                                        id="pesqCampoDepartamentoLotacao"><label
+                                        for="pesqCampoDepartamentoLotacao">Departamento de Lotação</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoUnidade"><label
+                                        for="pesqCampoUnidade">Unidade</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoOrigem"><label
+                                        for="pesqCampoOrigem">Origem</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoAnexo"><label
+                                        for="pesqCampoAnexo">Anexo</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoNumeroRegistro"><label
+                                        for="pesqCampoNumeroRegistro">Nº Registro</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoResponsavel"><label
+                                        for="pesqCampoResponsavel">Responsável</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoContratante"><label
+                                        for="pesqCampoContratante">Contratante</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoDataProducao"><label
+                                        for="pesqCampoDataProducao">Data de Produção</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoDataDestinacao"><label
+                                        for="pesqCampoDataDestinacao">Data de Destinação</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoImplantacao"><label
+                                        for="pesqCampoImplantacao">Implantação</label></div>
+                                <div class="checkbox-item"><input type="checkbox"
+                                        id="pesqCampoJustificativaAlteracao"><label
+                                        for="pesqCampoJustificativaAlteracao">Justificativa de Alteração</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoNomeColaborador"><label
+                                        for="pesqCampoNomeColaborador">Nome do Colaborador</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoTipoDocumental"><label
+                                        for="pesqCampoTipoDocumental">Tipo Documental</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoDataNascimento"><label
+                                        for="pesqCampoDataNascimento">Data de Nascimento</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoNomeMae"><label
+                                        for="pesqCampoNomeMae">Nome da Mãe</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoNomePai"><label
+                                        for="pesqCampoNomePai">Nome do Pai</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoCPF"><label
+                                        for="pesqCampoCPF">CPF</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoDataObito"><label
+                                        for="pesqCampoDataObito">Data do Óbito</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoSigiloAssociado"><label
+                                        for="pesqCampoSigiloAssociado">Sigilo Associado</label></div>
+                                <div class="checkbox-item"><input type="checkbox"
+                                        id="pesqCampoStatusGestaoDocumental"><label
+                                        for="pesqCampoStatusGestaoDocumental">Status Gestão Documental</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoNomeAssinante"><label
+                                        for="pesqCampoNomeAssinante">Nome do Assinante</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoClasse"><label
+                                        for="pesqCampoClasse">Classe</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoSubclasse"><label
+                                        for="pesqCampoSubclasse">Subclasse</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoGrupo"><label
+                                        for="pesqCampoGrupo">Grupo</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoSubgrupo"><label
+                                        for="pesqCampoSubgrupo">Subgrupo</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoDataEvento"><label
+                                        for="pesqCampoDataEvento">Data do Evento</label></div>
+                                <div class="checkbox-item"><input type="checkbox"
+                                        id="pesqCampoPrazoAdicionalGuarda"><label
+                                        for="pesqCampoPrazoAdicionalGuarda">Prazo Adicional de Guarda</label></div>
+                                <div class="checkbox-item"><input type="checkbox"
+                                        id="pesqCampoJustificativaAlteracao2"><label
+                                        for="pesqCampoJustificativaAlteracao2">Justificativa da Alteração</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoAnoInicial"><label
+                                        for="pesqCampoAnoInicial">Ano Inicial</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoColaborador"><label
+                                        for="pesqCampoColaborador">Colaborador</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoCentroCustos"><label
+                                        for="pesqCampoCentroCustos">Centro de Custos</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoCPF2"><label
+                                        for="pesqCampoCPF2">CPF</label></div>
+                                <div class="checkbox-item"><input type="checkbox" id="pesqCampoAvaliacao"><label
+                                        for="pesqCampoAvaliacao">Avaliação</label></div>
+                            </div>
+                            <div class="pesquisa-card-actions">
+                                <button type="button" class="btn-docz redB"
+                                    onclick="fecharPesquisaCard()">Cancelar</button>
+                                <button type="button" class="btn-docz greenB"
+                                    onclick="salvarPersonalizacaoPesquisa()">Salvar Personalização</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+
+            <div class="dialog-footer">
+                <button class="btn-docz dblueB" onclick="abrirSeletorModeloProjeto()">
+                    Selecionar Modelo de Projeto
+                </button>
+                <button class="btn-docz greyB" onclick="fecharModal()">Cancelar</button>
+                <button class="btn-docz greenB" onclick="salvarConfiguracoes()">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="docz-popup-overlay" id="doczPopupOverlay" aria-hidden="true">
+        <div class="docz-popup" role="dialog" aria-modal="true" aria-labelledby="doczPopupTitle">
+            <div class="docz-popup-header">
+                <span class="docz-popup-title" id="doczPopupTitle">Aviso</span>
+                <button type="button" class="docz-popup-close" onclick="doczPopupClose()" aria-label="Fechar">×</button>
+            </div>
+            <div class="docz-popup-body" id="doczPopupBody"></div>
+            <div class="docz-popup-footer" id="doczPopupFooter"></div>
+        </div>
+    </div>
+
+    <script>
+        var armazensLista = [];
+        var currentHighlightTarget = null;
+
+        var modelosProjeto = [
+            { id: 'modelo-qualif', nome: 'MODELO QUALIF (SECRETARIA DE QUALIFICAÇÃO E EMPREGO)' },
+            { id: 'modelo-sit', nome: 'MODELO SIT - SECRETARIA DE INSPEÇÃO DO TRABALHO' },
+            { id: 'modelo-saude', nome: 'MODELO SAÚDE (SECRETARIA MUNICIPAL DE SAÚDE)' },
+            { id: 'modelo-rh', nome: 'MODELO RH (SECRETARIA DE RECURSOS HUMANOS)' },
+            { id: 'modelo-juridico', nome: 'MODELO JURÍDICO (PROCURADORIA GERAL DO MUNICÍPIO)' },
+            { id: 'modelo-fiscal', nome: 'MODELO FISCAL (SECRETARIA DA FAZENDA)' }
+        ];
+
+        // ============================================
+        // POPUP GENÉRICO DOCZ
+        // ============================================
+        var _doczPopupState = {
+            onConfirm: null,
+            onCancel: null,
+            onClose: null,
+            type: null
+        };
+
+        function doczPopupOpen(options) {
+            var overlay = document.getElementById('doczPopupOverlay');
+            var titleEl = document.getElementById('doczPopupTitle');
+            var bodyEl = document.getElementById('doczPopupBody');
+            var footerEl = document.getElementById('doczPopupFooter');
+            var popup = overlay.querySelector('.docz-popup');
+
+            bodyEl.innerHTML = '';
+            footerEl.innerHTML = '';
+            _doczPopupState.onConfirm = options.onConfirm || null;
+            _doczPopupState.onCancel = options.onCancel || null;
+            _doczPopupState.onClose = options.onClose || null;
+            _doczPopupState.type = options.type || 'info';
+
+            popup.classList.toggle('docz-popup-lg', !!options.large);
+            popup.classList.toggle('docz-popup-xl', options.size === 'xl');
+            titleEl.textContent = options.title || 'Aviso';
+
+            if (typeof options.body === 'string') {
+                bodyEl.innerHTML = options.body;
+            } else if (options.body instanceof Node) {
+                bodyEl.appendChild(options.body);
+            }
+
+            var buttons = options.buttons || [];
+            buttons.forEach(function (btn) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'btn-docz ' + (btn.class || 'greyB');
+                b.textContent = btn.label;
+                if (btn.disabled) b.disabled = true;
+                b.onclick = function () {
+                    var keepOpen = false;
+                    if (typeof btn.onClick === 'function') {
+                        keepOpen = btn.onClick();
+                    }
+                    if (keepOpen !== true) {
+                        doczPopupClose();
+                    }
+                };
+                footerEl.appendChild(b);
+            });
+
+            overlay.classList.add('visible');
+            overlay.setAttribute('aria-hidden', 'false');
+
+            setTimeout(function () {
+                var focusEl = bodyEl.querySelector('input, select, textarea, button') ||
+                    footerEl.querySelector('button:not([disabled])');
+                if (focusEl) focusEl.focus();
+            }, 60);
+        }
+
+        function doczPopupClose() {
+            var overlay = document.getElementById('doczPopupOverlay');
+            if (!overlay) return;
+            overlay.classList.remove('visible');
+            overlay.setAttribute('aria-hidden', 'true');
+
+            if (typeof _doczPopupState.onClose === 'function') {
+                var cb = _doczPopupState.onClose;
+                _doczPopupState.onClose = null;
+                cb();
+            }
+        }
+
+        document.addEventListener('click', function (e) {
+            var overlay = document.getElementById('doczPopupOverlay');
+            if (overlay && e.target === overlay) {
+                doczPopupClose();
+            }
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') {
+                var overlay = document.getElementById('doczPopupOverlay');
+                if (overlay && overlay.classList.contains('visible')) {
+                    doczPopupClose();
+                }
+            }
+        });
+
+        function doczAlert(message, title, type) {
+            type = type || 'info';
+            var icones = { info: 'i', success: '✓', warning: '!', danger: '✕' };
+
+            var bodyHTML =
+                '<div class="docz-popup-row">' +
+                '<span class="docz-popup-icon ' + type + '">' + (icones[type] || 'i') + '</span>' +
+                '<div style="flex:1;">' + message + '</div>' +
+                '</div>';
+
+            doczPopupOpen({
+                title: title || 'Aviso',
+                body: bodyHTML,
+                buttons: [{ label: 'OK', class: 'dblueB' }]
+            });
+        }
+
+        function doczConfirm(message, title, onConfirm, onCancel) {
+            var bodyHTML =
+                '<div class="docz-popup-row">' +
+                '<span class="docz-popup-icon warning">?</span>' +
+                '<div style="flex:1;">' + message + '</div>' +
+                '</div>';
+
+            doczPopupOpen({
+                title: title || 'Confirmação',
+                body: bodyHTML,
+                buttons: [
+                    {
+                        label: 'Cancelar',
+                        class: 'redB',
+                        onClick: function () {
+                            doczPopupClose();
+                            if (typeof onCancel === 'function') {
+                                setTimeout(onCancel, 80);
+                            }
+                            return true;
+                        }
+                    },
+                    {
+                        label: 'Confirmar',
+                        class: 'greenB',
+                        onClick: function () {
+                            doczPopupClose();
+                            if (typeof onConfirm === 'function') {
+                                setTimeout(onConfirm, 80);
+                            }
+                            return true;
+                        }
+                    }
+                ]
+            });
+        }
+
+        function doczPrompt(message, defaultValue, onConfirm, title) {
+            var bodyHTML =
+                '<div class="docz-popup-row">' +
+                '<span class="docz-popup-icon info">?</span>' +
+                '<div style="flex:1;">' + message +
+                '<input type="text" class="docz-popup-input" id="doczPromptInput" value="' +
+                String(defaultValue || '').replace(/"/g, '&quot;') + '">' +
+                '</div>' +
+                '</div>';
+
+            doczPopupOpen({
+                title: title || 'Informe um valor',
+                body: bodyHTML,
+                buttons: [
+                    {
+                        label: 'Cancelar',
+                        class: 'redB',
+                        onClick: function () {
+                            doczPopupClose();
+                            if (typeof onConfirm === 'function') {
+                                setTimeout(function () { onConfirm(null); }, 80);
+                            }
+                            return true;
+                        }
+                    },
+                    {
+                        label: 'OK',
+                        class: 'dblueB',
+                        onClick: function () {
+                            var inp = document.getElementById('doczPromptInput');
+                            var val = inp ? inp.value : '';
+                            doczPopupClose();
+                            if (typeof onConfirm === 'function') {
+                                setTimeout(function () { onConfirm(val); }, 80);
+                            }
+                            return true;
+                        }
+                    }
+                ]
+            });
+
+            setTimeout(function () {
+                var inp = document.getElementById('doczPromptInput');
+                if (inp) {
+                    inp.focus();
+                    inp.select();
+                    inp.addEventListener('keydown', function (e) {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            var val = inp.value;
+                            doczPopupClose();
+                            if (typeof onConfirm === 'function') {
+                                setTimeout(function () { onConfirm(val); }, 80);
+                            }
+                        }
+                    });
+                }
+            }, 60);
+        }
+
+        // ============================================
+        // SUBTABS
+        // ============================================
+        function renderSubtabs(activeTabId) {
+            var subtabsNav = document.getElementById('subtabsNav');
+            var pane = document.getElementById(activeTabId);
+            if (!subtabsNav || !pane) return;
+
+            subtabsNav.innerHTML = '';
+            subtabsNav.classList.remove('visible');
+
+            var subtabsJson = pane.getAttribute('data-subtabs');
+            if (!subtabsJson) return;
+
+            var subtabs;
+            try { subtabs = JSON.parse(subtabsJson); } catch (e) { return; }
+            if (!Array.isArray(subtabs) || subtabs.length === 0) return;
+
+            subtabs.forEach(function (st) {
+                var btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'subtab-link' + (st.active ? ' active' : '');
+                btn.setAttribute('role', 'tab');
+                btn.setAttribute('aria-selected', st.active ? 'true' : 'false');
+                btn.setAttribute('aria-controls', st.id);
+                btn.textContent = st.label;
+                btn.dataset.subtab = st.id;
+                btn.onclick = function () { openSubtab(st.id); };
+                subtabsNav.appendChild(btn);
+            });
+
+            subtabsNav.classList.add('visible');
+        }
+
+        function openSubtab(paneId) {
+            var subtabsNav = document.getElementById('subtabsNav');
+            if (!subtabsNav) return;
+
+            subtabsNav.querySelectorAll('.subtab-link').forEach(function (btn) {
+                var isActive = btn.dataset.subtab === paneId;
+                btn.classList.toggle('active', isActive);
+                btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
+            });
+
+            var activeTab = document.querySelector('.tab-pane.active');
+            if (!activeTab) return;
+
+            activeTab.querySelectorAll('.subtab-pane').forEach(function (sp) {
+                var isActive = sp.id === paneId;
+                sp.classList.toggle('active', isActive);
+                sp.setAttribute('aria-hidden', String(!isActive));
+            });
+        }
+
+        // ============================================
+        // NAVEGAÇÃO
+        // ============================================
+        function openTab(evt, tabName) {
+            var i, tabpane, tablinks;
+            tabpane = document.getElementsByClassName("tab-pane");
+            for (i = 0; i < tabpane.length; i++) {
+                tabpane[i].classList.remove("active");
+            }
+            tablinks = document.getElementsByClassName("tab-link");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].classList.remove("active");
+                tablinks[i].setAttribute("aria-selected", "false");
+            }
+            document.getElementById(tabName).classList.add("active");
+
+            var clickedTab = evt.currentTarget;
+            clickedTab.classList.add("active");
+            clickedTab.setAttribute("aria-selected", "true");
+
+            renderSubtabs(tabName);
+
+            var pane = document.getElementById(tabName);
+            var subtabPanes = pane.querySelectorAll('.subtab-pane');
+            if (subtabPanes.length > 0) {
+                var hasActive = false;
+                subtabPanes.forEach(function (sp) {
+                    if (sp.classList.contains('active')) hasActive = true;
+                });
+                if (!hasActive) {
+                    subtabPanes[0].classList.add('active');
+                    var firstId = subtabPanes[0].id;
+                    var btn = document.querySelector('#subtabsNav .subtab-link[data-subtab="' + firstId + '"]');
+                    if (btn) btn.classList.add('active');
+                }
+            }
+
+            if (!evt.fromSearch) {
+                clearSearch();
+            }
+        }
+
+        function onSearchInput() {
+            var term = document.getElementById('tabSearch').value.trim();
+            var resultsBox = document.getElementById('searchResults');
+            var clearBtn = document.getElementById('clearSearch');
+
+            if (term === '') {
+                resultsBox.classList.remove('visible');
+                resultsBox.innerHTML = '';
+                clearBtn.classList.remove('visible');
+                return;
+            }
+
+            clearBtn.classList.add('visible');
+            renderSearchResults(term);
+        }
+
+        function renderSearchResults(term) {
+            var resultsBox = document.getElementById('searchResults');
+            var results = [];
+            var termLower = term.toLowerCase();
+
+            document.querySelectorAll('.tab-pane').forEach(function (pane) {
+                var tabId = pane.id;
+                if (tabId === 'aba8') return;
+
+                var tabLink = document.querySelector('.tab-link[data-tab="' + tabId + '"]');
+                var tabLabel = tabLink ? tabLink.textContent.trim() : tabId;
+
+                var blocks = pane.querySelectorAll('.subtab-pane');
+                if (blocks.length === 0) blocks = [pane];
+
+                blocks.forEach(function (block) {
+                    var subId = block.classList.contains('subtab-pane') ? block.id : null;
+                    var subLabel = '';
+                    if (subId) {
+                        var subBtn = document.querySelector('#subtabsNav .subtab-link[data-subtab="' + subId + '"]');
+                        if (subBtn) subLabel = subBtn.textContent.trim();
+                    }
+
+                    var vistos = new Set();
+
+                    block.querySelectorAll('.checkbox-item').forEach(function (item) {
+                        var label = item.querySelector('label');
+                        if (!label) return;
+                        var text = label.textContent.trim();
+                        if (text.toLowerCase().includes(termLower) && !vistos.has(item)) {
+                            vistos.add(item);
+                            results.push({ item: item, label: text, tabId: tabId, tabLabel: tabLabel, subLabel: subLabel, subId: subId });
+                        }
+                    });
+
+                    block.querySelectorAll('.form-group').forEach(function (group) {
+                        var label = group.querySelector('label');
+                        if (!label) return;
+                        var text = label.textContent.trim();
+                        if (text.toLowerCase().includes(termLower) && !vistos.has(group)) {
+                            vistos.add(group);
+                            results.push({ item: group, label: text, tabId: tabId, tabLabel: tabLabel, subLabel: subLabel, subId: subId });
+                        }
+                    });
+
+                    block.querySelectorAll('label').forEach(function (label) {
+                        if (label.closest('.checkbox-item') || label.closest('.form-group')) return;
+                        var text = label.textContent.trim();
+                        if (text.toLowerCase().includes(termLower) && !vistos.has(label)) {
+                            vistos.add(label);
+                            results.push({ item: label, label: text, tabId: tabId, tabLabel: tabLabel, subLabel: subLabel, subId: subId });
+                        }
+                    });
+                });
+            });
+
+            if (results.length === 0) {
+                resultsBox.innerHTML = '<div class="result-empty">Nenhum parâmetro encontrado</div>';
+                resultsBox.classList.add('visible');
+                return;
+            }
+
+            var limited = results.slice(0, 80);
+            resultsBox.innerHTML = '';
+            limited.forEach(function (r) {
+                var div = document.createElement('div');
+                div.className = 'result-item';
+                div.setAttribute('role', 'option');
+
+                var pathParts = [r.tabLabel];
+                if (r.subLabel) pathParts.push(r.subLabel);
+                var path = pathParts.join(' › ');
+
+                var escaped = r.label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                var regex = new RegExp('(' + escaped + ')', 'ig');
+                var highlighted = r.label.replace(regex, '<mark>$1</mark>');
+
+                div.innerHTML =
+                    '<span class="result-label">' + highlighted + '</span>' +
+                    '<span class="result-path">' + path + '</span>';
+
+                div.onclick = function () { irParaResultado(r); };
+                resultsBox.appendChild(div);
+            });
+
+            resultsBox.classList.add('visible');
+        }
+
+        function irParaResultado(r) {
+            document.getElementById('searchResults').classList.remove('visible');
+
+            var tabLink = document.querySelector('.tab-link[data-tab="' + r.tabId + '"]');
+            if (tabLink) {
+                var fakeEvent = { currentTarget: tabLink, fromSearch: true };
+                openTab(fakeEvent, r.tabId);
+            }
+
+            if (r.subId) {
+                openSubtab(r.subId);
+            }
+
+            var wrapper = r.item.closest('.param-wrapper');
+            if (wrapper) {
+                wrapper.classList.add('active');
+                var body = wrapper.querySelector('.param-card-body');
+                if (body) body.classList.add('visible');
+                var icon = wrapper.querySelector('.toggle-icon');
+                if (icon) icon.classList.add('open');
+
+                var wrapperChk = wrapper.querySelector('.checkbox-item input[type="checkbox"]');
+                if (wrapperChk) {
+                    wrapperChk.checked = true;
+                    if (typeof updateParamWrapperState === 'function') {
+                        updateParamWrapperState(wrapper.id, true);
+                    }
+                }
+            }
+
+            setTimeout(function () {
+                r.item.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                if (currentHighlightTarget) {
+                    currentHighlightTarget.classList.remove('search-target-highlight');
+                }
+
+                r.item.classList.add('search-target-highlight');
+                currentHighlightTarget = r.item;
+            }, 250);
+        }
+
+        document.addEventListener('click', function (e) {
+            if (currentHighlightTarget && !currentHighlightTarget.contains(e.target)) {
+                currentHighlightTarget.classList.remove('search-target-highlight');
+                currentHighlightTarget = null;
+            }
+
+            var searchWrapper = document.querySelector('.tabs-nav .search-wrapper');
+            var resultsBox = document.getElementById('searchResults');
+            if (searchWrapper && !searchWrapper.contains(e.target)) {
+                resultsBox.classList.remove('visible');
+            }
+        });
+
+        function handleSearchKeydown(event) {
+            var resultsBox = document.getElementById('searchResults');
+            var items = resultsBox.querySelectorAll('.result-item');
+
+            if (event.key === 'ArrowDown') {
+                event.preventDefault();
+                if (items.length === 0) return;
+                var active = resultsBox.querySelector('.result-item.active');
+                var idx = active ? Array.prototype.indexOf.call(items, active) : -1;
+                idx = (idx + 1) % items.length;
+                items.forEach(function (it) { it.classList.remove('active'); });
+                items[idx].classList.add('active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            } else if (event.key === 'ArrowUp') {
+                event.preventDefault();
+                if (items.length === 0) return;
+                var active = resultsBox.querySelector('.result-item.active');
+                var idx = active ? Array.prototype.indexOf.call(items, active) : 0;
+                idx = (idx - 1 + items.length) % items.length;
+                items.forEach(function (it) { it.classList.remove('active'); });
+                items[idx].classList.add('active');
+                items[idx].scrollIntoView({ block: 'nearest' });
+            } else if (event.key === 'Enter') {
+                event.preventDefault();
+                var active = resultsBox.querySelector('.result-item.active');
+                if (active) {
+                    active.click();
+                } else if (items.length > 0) {
+                    items[0].click();
+                }
+            } else if (event.key === 'Escape') {
+                resultsBox.classList.remove('visible');
+            }
+        }
+
+        function clearSearch() {
+            document.getElementById('tabSearch').value = '';
+            document.getElementById('clearSearch').classList.remove('visible');
+            document.getElementById('searchResults').classList.remove('visible');
+            document.getElementById('searchResults').innerHTML = '';
+            document.querySelectorAll('.tab-link').forEach(function (el) {
+                el.style.display = '';
+                el.classList.remove('highlight');
+            });
+            if (currentHighlightTarget) {
+                currentHighlightTarget.classList.remove('search-target-highlight');
+                currentHighlightTarget = null;
+            }
+        }
+
+        // ============================================
+        // ARMAZÉM
+        // ============================================
+        function adicionarArmazem() {
+            var select = document.getElementById('armazemSelect');
+            var valor = select.value;
+            if (valor === "") {
+                doczAlert('Selecione um armazém antes de adicionar.', 'Atenção', 'warning');
+                return;
+            }
+            if (armazensLista.indexOf(valor) === -1) {
+                armazensLista.push(valor);
+                atualizarListaArmazens();
+            } else {
+                doczAlert('Este armazém já foi adicionado à lista.', 'Atenção', 'warning');
+            }
+            select.value = "";
+        }
+
+        function removerArmazem(index) { armazensLista.splice(index, 1); atualizarListaArmazens(); }
+
+        function atualizarListaArmazens() {
+            var container = document.getElementById('listaArmazens');
+            container.innerHTML = '';
+            if (armazensLista.length === 0) {
+                container.innerHTML = '<div style="padding:6px;color:#999;text-align:center;">Nenhum Armazém Adicionado</div>';
+                return;
+            }
+            for (var i = 0; i < armazensLista.length; i++) {
+                var item = document.createElement('div'); item.className = 'list-item';
+                item.innerHTML = '<span class="list-item-text">' + armazensLista[i] + '</span><button class="btn-remove" onclick="removerArmazem(' + i + ')">X</button>';
+                container.appendChild(item);
+            }
+        }
+
+        // ============================================
+        // AÇÕES MODAL PRINCIPAL
+        // ============================================
+        function fecharModal() {
+            doczConfirm(
+                'Deseja realmente cancelar? As alterações não salvas serão perdidas.',
+                'Cancelar Alterações',
+                function () {
+                    doczAlert('Modal fechado.', 'Sucesso', 'success');
+                }
+            );
+        }
+
+        function salvarConfiguracoes() {
+            doczAlert('Configurações salvas com sucesso!', 'Sucesso', 'success');
+        }
+
+        // ============================================
+        // DETECÇÃO DE CAMPOS PREENCHIDOS
+        // ============================================
+        function temAlgumCampoPreenchido() {
+            var container = document.querySelector('.tabs-body');
+            if (!container) return false;
+
+            var controles = container.querySelectorAll('input, select, textarea');
+
+            for (var i = 0; i < controles.length; i++) {
+                var el = controles[i];
+
+                if (el.disabled) continue;
+                if (el.type === 'hidden') continue;
+                if (el.closest('.docz-popup-overlay')) continue;
+                if (el.id === 'tabSearch' || el.id === 'doczPromptInput') continue;
+
+                if (el.type === 'checkbox' || el.type === 'radio') {
+                    if (el.checked) return true;
+                } else {
+                    if (el.value && String(el.value).trim() !== '') return true;
+                }
+            }
+            return false;
+        }
+
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        // ============================================
+        // SALVAR MODELO ATUAL
+        // ============================================
+        function salvarModeloAtual() {
+            if (!temAlgumCampoPreenchido()) {
+                doczAlert(
+                    'Preencha pelo menos um campo antes de salvar um modelo.',
+                    'Nada para salvar',
+                    'warning'
+                );
+                return;
+            }
+
+            doczPopupClose();
+
+            setTimeout(function () {
+                doczPrompt(
+                    'Informe um nome para o novo modelo de projeto.<br>' +
+                    '<span style="font-size:11.5px;color:#7a8790;">' +
+                    'Padrão sugerido: <strong>MODELO SIGLA (DESCRIÇÃO COMPLETA)</strong></span>',
+                    'MODELO ',
+                    function (nome) {
+                        if (nome === null) {
+                            setTimeout(abrirSeletorModeloProjeto, 100);
+                            return;
+                        }
+
+                        nome = String(nome).trim();
+
+                        if (!nome) {
+                            doczAlert('O nome do modelo não pode ficar vazio.', 'Atenção', 'warning');
+                            setTimeout(abrirSeletorModeloProjeto, 200);
+                            return;
+                        }
+
+                        nome = nome.toUpperCase();
+
+                        var existente = modelosProjeto.some(function (m) {
+                            return m.nome.toUpperCase() === nome;
+                        });
+                        if (existente) {
+                            doczAlert('Já existe um modelo com esse nome. Escolha outro.', 'Nome duplicado', 'warning');
+                            setTimeout(abrirSeletorModeloProjeto, 200);
+                            return;
+                        }
+
+                        var novoId = 'modelo-custom-' + Date.now();
+                        modelosProjeto.push({ id: novoId, nome: nome });
+
+                        doczAlert(
+                            'Modelo <strong>"' + escapeHtml(nome) + '"</strong> salvo com sucesso!',
+                            'Sucesso',
+                            'success'
+                        );
+
+                        setTimeout(abrirSeletorModeloProjeto, 200);
+                    },
+                    'Salvar Modelo Atual'
+                );
+            }, 120);
+        }
+
+        // ============================================
+        // SELETOR DE MODELO
+        // ============================================
+        function abrirSeletorModeloProjeto() {
+            var bodyEl = document.createElement('div');
+
+            var intro = document.createElement('p');
+            intro.textContent = 'Selecione um modelo para pré-configurar o projeto ou salve a configuração atual como um novo modelo.';
+            bodyEl.appendChild(intro);
+
+            var subtitulo = document.createElement('div');
+            subtitulo.className = 'docz-popup-subtitulo';
+            subtitulo.textContent = modelosProjeto.length + ' modelo' +
+                (modelosProjeto.length === 1 ? '' : 's') + ' disponíve' +
+                (modelosProjeto.length === 1 ? 'l:' : 'is:');
+            bodyEl.appendChild(subtitulo);
+
+            var lista = document.createElement('div');
+            lista.className = 'docz-modelos-lista';
+            lista.id = 'doczModelosLista';
+
+            if (modelosProjeto.length === 0) {
+                var vazio = document.createElement('div');
+                vazio.className = 'docz-modelo-item modelo-vazio';
+                vazio.textContent = 'Nenhum modelo disponível.';
+                lista.appendChild(vazio);
+            } else {
+                modelosProjeto.forEach(function (m) {
+                    var item = document.createElement('button');
+                    item.type = 'button';
+                    item.className = 'docz-modelo-item';
+                    item.dataset.modeloId = m.id;
+                    item.title = m.nome;
+                    item.innerHTML =
+                        '<span class="modelo-nome">' + escapeHtml(m.nome) + '</span>' +
+                        '<span class="modelo-check">✓</span>';
+
+                    item.onclick = function () {
+                        lista.querySelectorAll('.docz-modelo-item').forEach(function (el) {
+                            el.classList.remove('selected');
+                        });
+                        item.classList.add('selected');
+                    };
+
+                    lista.appendChild(item);
+                });
+            }
+
+            bodyEl.appendChild(lista);
+
+            var podeSalvar = temAlgumCampoPreenchido();
+
+            doczPopupOpen({
+                title: 'Selecionar Modelo de Projeto',
+                body: bodyEl,
+                size: 'xl',
+                buttons: [
+                    {
+                        label: 'Salvar Modelo Atual',
+                        class: 'greenB',
+                        disabled: !podeSalvar,
+                        onClick: function () {
+                            salvarModeloAtual();
+                            return true;
+                        }
+                    },
+                    { label: 'Cancelar', class: 'redB' },
+                    {
+                        label: 'Aplicar Modelo',
+                        class: 'dblueB',
+                        onClick: function () {
+                            var sel = lista.querySelector('.docz-modelo-item.selected');
+                            if (!sel) {
+                                doczAlert('Selecione um modelo antes de aplicar.', 'Atenção', 'warning');
+                                return true;
+                            }
+                            var modelo = modelosProjeto.find(function (m) { return m.id === sel.dataset.modeloId; });
+                            doczPopupClose();
+                            setTimeout(function () { aplicarModeloProjeto(modelo); }, 120);
+                            return true;
+                        }
+                    }
+                ]
+            });
+
+            if (!podeSalvar) {
+                var btnSalvar = document.getElementById('doczPopupFooter').querySelector('button');
+                if (btnSalvar) {
+                    btnSalvar.title = 'Preencha pelo menos um campo para salvar um modelo';
+                }
+            }
+        }
+
+        function aplicarModeloProjeto(modelo) {
+            doczConfirm(
+                'Aplicar o modelo <strong>"' + escapeHtml(modelo.nome) + '"</strong>?<br><br>' +
+                'As configurações atuais serão substituídas.',
+                'Aplicar Modelo de Projeto',
+                function () {
+                    var preset = obterPresetModelo(modelo.id);
+                    if (!preset) {
+                        doczAlert('Modelo <strong>"' + escapeHtml(modelo.nome) + '"</strong> aplicado (sem preset definido).', 'Sucesso', 'success');
+                        return;
+                    }
+
+                    Object.keys(preset).forEach(function (campoId) {
+                        var el = document.getElementById(campoId);
+                        if (!el) return;
+
+                        if (el.type === 'checkbox' || el.type === 'radio') {
+                            el.checked = !!preset[campoId];
+                            if (typeof el.onclick === 'function') el.onclick();
+                        } else {
+                            el.value = preset[campoId];
+                            el.dispatchEvent(new Event('input', { bubbles: true }));
+                            el.dispatchEvent(new Event('change', { bubbles: true }));
+                        }
+                    });
+
+                    document.querySelectorAll('.param-wrapper').forEach(function (wrapper) {
+                        var chk = wrapper.querySelector('.checkbox-item input[type="checkbox"]');
+                        if (chk && typeof updateParamWrapperState === 'function') {
+                            updateParamWrapperState(wrapper.id, chk.checked);
+                        }
+                    });
+
+                    if (typeof fixarColunasCardsExpansiveis === 'function') {
+                        fixarColunasCardsExpansiveis();
+                    }
+
+                    doczAlert('Modelo <strong>"' + escapeHtml(modelo.nome) + '"</strong> aplicado com sucesso!', 'Sucesso', 'success');
+                }
+            );
+        }
+
+        function obterPresetModelo(modeloId) {
+            var presets = {
+                'modelo-qualif': {
+                    'ativoCheck': true, 'principalCheck': true,
+                    'descricao': 'Projeto destinado à guarda de documentação da Secretaria de Qualificação e Emprego.',
+                    'limiteSolicitacaoDiaria': '50', 'limiteIndexacaoLote': '200',
+                    'fusoHorario': 'America/Sao_Paulo (UTC-03:00)',
+                    'permitirAdicionarArquivos': true, 'permitirImprimirEtiquetas': true,
+                    'compartilharPesquisa': true, 'compartilharSolicitacao': true,
+                    'podeSolicitarCaixa': true, 'podeSolicitarDocumento': true,
+                    'podeSolicitarCaixaPorDocumento': true,
+                    'camposOSDocumento': 'Nome;Cargo;Matrícula', 'camposOSCaixa': 'Lote;Caixa;Ano',
+                    'enviarNotificacaoOS': true, 'obrigatoriedadeDestinatario': true,
+                    'finalizarOS2Fatores': false, 'mostrarDadosTransporteOS': true,
+                    'disponibilizarRegistroFotografico': true, 'inserirVinculados': true,
+                    'formatoAssinaturaOS': 'Ambas (Cliente + Projeto)',
+                    'controlarVencimentoCheck': true, 'prazoDevolucao': '30',
+                    'diaEnvioNotificacao': '5', 'tempoBloqueioUsuario': '60',
+                    'alteracaoPrazoCheck': true, 'alterarEtapaOSRecolhimento': true,
+                    'etapaDocumentalPosOSRecolhimento': 'Aprovado',
+                    'emailComunicacoes': 'qualif@municipio.gov.br',
+                    'emailNotificacaoLote': 'lotes.qualif@municipio.gov.br',
+                    'emailGestaoDocumental': 'gestao.qualif@municipio.gov.br',
+                    'emailDigitalizacao': 'digitalizacao.qualif@municipio.gov.br',
+                    'emailNovosArquivos': 'novosarquivos.qualif@municipio.gov.br',
+                    'verIntegracoes': true, 'compartilharPacotesPreservacao': true,
+                    'notificarSlaNormalCheck': true,
+                    'emailSlaNormal': 'qualif@municipio.gov.br;gestao.qualif@municipio.gov.br',
+                    'tempoAvisoSlaNormal': '72;48;24',
+                    'notificarSlaUrgenteCheck': true,
+                    'emailSlaUrgente': 'qualif.urgente@municipio.gov.br',
+                    'tempoAvisoSlaUrgente': '24;12;4', 'mostrarDadosTransporteCheck': true,
+                    'enviarRelatorioAnual': true, 'eliminarDadosExpurgo': true,
+                    'emailRelatorioExpurgo': 'expurgo.qualif@municipio.gov.br',
+                    'notificarPrazoGuardaCheck': true, 'intervaloAlerta': '60;30;15',
+                    'destinatariosAlerta': 'gestao.qualif@municipio.gov.br;qualif@municipio.gov.br',
+                    'notificarExpurgoCheck': true, 'periodicidadeExpurgo': '30', 'periodoExpurgo': 'anual',
+                    'armazenarDoczFileService': true, 'permitirDigitalizar': true,
+                    'realizarChancela': true, 'realizarChancelaLote': true,
+                    'marcaDaguaChancela': true, 'assinaturaCertificado': true,
+                    'assinaturaCertificaLote': true, 'permitirUploadAPI': true,
+                    'substituirArquivoAPI': true, 'converterPDFA': true,
+                    'etapaDocumentalEntradaPDFA': 'Aguardando Aprovação',
+                    'etapaDocumentalSaidaPDFA': 'Finalizado',
+                    'habilitarEnvioSEI': true, 'visualizarVersoes': true,
+                    'liberarAvaliacaoSemTipologia': false, 'arquivarDesarquivar': true,
+                    'permitirRelacionamentos': true, 'restringirPorDepartamento': true,
+                    'exigirJustificativaAlterar': true, 'alteracaoSomenteAutorCheck': true,
+                    'etapaDocumentalAutor': 'Aprovado', 'inativarArquivosCheck': true,
+                    'etapaDocumentalInativar': 'Arquivado',
+                    'habilitarMetadadosCheck': true,
+                    'autorMetadado': 'Secretaria de Qualificação e Emprego',
+                    'localDigitalizacao': 'Sede da Secretaria de Qualificação e Emprego',
+                    'responsavelDigitalizacao': 'Equipe de Digitalização QUALIF',
+                    'localProducao': 'Departamento de Recursos Humanos',
+                    'pesqCampoLocalizacao': true, 'pesqCampoStatus': true, 'pesqCampoServico': true,
+                    'pesqCampoDescricao': true, 'pesqCampoDepartamento': true, 'pesqCampoTipoObjeto': true,
+                    'pesqCampoLacre01': true, 'pesqCampoLacre02': true,
+                    'pesqCampoNumeroUltimaSolicitacao': true, 'pesqCampoUsuario': true,
+                    'pesqCampoNomeColaborador': true, 'pesqCampoMatricula': true,
+                    'pesqCampoCPF': true, 'pesqCampoDataNascimento': true, 'pesqCampoCentroCustos': true
+                },
+                'modelo-sit': {
+                    'ativoCheck': true, 'principalCheck': false,
+                    'descricao': 'Projeto para guarda de autos de infração, laudos e documentação da Inspeção do Trabalho.',
+                    'limiteSolicitacaoDiaria': '80', 'limiteIndexacaoLote': '300',
+                    'fusoHorario': 'America/Sao_Paulo (UTC-03:00)',
+                    'permitirAdicionarArquivos': true, 'permitirImprimirEtiquetas': true,
+                    'compartilharPesquisa': false, 'compartilharSolicitacao': true,
+                    'substituirFotolabel': true,
+                    'podeSolicitarCaixa': true, 'podeSolicitarDocumento': true,
+                    'podeSolicitarCaixaPorDocumento': false,
+                    'camposOSDocumento': 'Auto de Infração;CNPJ;Razão Social', 'camposOSCaixa': 'Lote;Ano;Regional',
+                    'enviarNotificacaoOS': true, 'obrigatoriedadeDestinatario': true,
+                    'finalizarOS2Fatores': true, 'mostrarDadosTransporteOS': false,
+                    'disponibilizarRegistroFotografico': true, 'inserirVinculados': true,
+                    'formatoAssinaturaOS': 'Cliente',
+                    'controlarVencimentoCheck': true, 'prazoDevolucao': '45',
+                    'diaEnvioNotificacao': '10', 'tempoBloqueioUsuario': '90',
+                    'alteracaoPrazoCheck': false, 'alterarEtapaOSRecolhimento': true,
+                    'etapaDocumentalPosOSRecolhimento': 'Arquivado',
+                    'emailComunicacoes': 'sit@municipio.gov.br',
+                    'emailNotificacaoLote': 'lotes.sit@municipio.gov.br',
+                    'emailGestaoDocumental': 'gestao.sit@municipio.gov.br',
+                    'emailDigitalizacao': 'digitalizacao.sit@municipio.gov.br',
+                    'emailNovosArquivos': 'novos.sit@municipio.gov.br',
+                    'verIntegracoes': true, 'compartilharPacotesPreservacao': false,
+                    'notificarSlaNormalCheck': true,
+                    'emailSlaNormal': 'sit@municipio.gov.br;fiscalizacao@municipio.gov.br',
+                    'tempoAvisoSlaNormal': '96;72;48;24',
+                    'notificarSlaUrgenteCheck': true,
+                    'emailSlaUrgente': 'sit.urgente@municipio.gov.br',
+                    'tempoAvisoSlaUrgente': '48;24;8', 'mostrarDadosTransporteCheck': false,
+                    'enviarRelatorioAnual': true, 'eliminarDadosExpurgo': false,
+                    'emailRelatorioExpurgo': 'expurgo.sit@municipio.gov.br',
+                    'notificarPrazoGuardaCheck': true, 'intervaloAlerta': '90;60;30;15',
+                    'destinatariosAlerta': 'gestao.sit@municipio.gov.br;auditoria@municipio.gov.br',
+                    'notificarExpurgoCheck': true, 'periodicidadeExpurgo': '60', 'periodoExpurgo': 'semestral',
+                    'armazenarDoczFileService': true, 'permitirDigitalizar': true,
+                    'realizarChancela': true, 'realizarChancelaLote': false,
+                    'marcaDaguaChancela': true, 'assinaturaCertificado': true,
+                    'assinaturaCertificaLote': true, 'permitirUploadAPI': true,
+                    'substituirArquivoAPI': false, 'converterPDFA': true,
+                    'etapaDocumentalEntradaPDFA': 'Aprovado',
+                    'etapaDocumentalSaidaPDFA': 'Arquivado',
+                    'habilitarEnvioSEI': true, 'visualizarVersoes': true,
+                    'liberarAvaliacaoSemTipologia': true, 'arquivarDesarquivar': true,
+                    'permitirRelacionamentos': true, 'restringirPorDepartamento': true,
+                    'exigirJustificativaAlterar': true, 'alteracaoSomenteAutorCheck': false,
+                    'inativarArquivosCheck': true, 'etapaDocumentalInativar': 'Cancelado',
+                    'habilitarMetadadosCheck': true,
+                    'autorMetadado': 'Secretaria de Inspeção do Trabalho',
+                    'localDigitalizacao': 'Sede SIT — Brasília/DF',
+                    'responsavelDigitalizacao': 'Equipe SIT',
+                    'localProducao': 'Auditoria Fiscal do Trabalho',
+                    'pesqCampoLocalizacao': true, 'pesqCampoStatus': true, 'pesqCampoServico': true,
+                    'pesqCampoDescricao': true, 'pesqCampoDepartamento': true, 'pesqCampoTipoObjeto': true,
+                    'pesqCampoLacre01': true, 'pesqCampoLacre02': true,
+                    'pesqCampoNumeroUltimaSolicitacao': true, 'pesqCampoUsuario': true,
+                    'pesqCampoClassificacao': true, 'pesqCampoVolume': true,
+                    'pesqCampoDataInicio': true, 'pesqCampoDataProducao': true,
+                    'pesqCampoTipoDocumental': true, 'pesqCampoOrigem': true,
+                    'pesqCampoDestino': true, 'pesqCampoResponsavel': true, 'pesqCampoContratante': true
+                },
+                'modelo-saude': {
+                    'ativoCheck': true, 'principalCheck': true,
+                    'descricao': 'Projeto para guarda de prontuários, laudos e documentação clínica da Secretaria de Saúde.',
+                    'limiteSolicitacaoDiaria': '100', 'limiteIndexacaoLote': '500',
+                    'fusoHorario': 'America/Sao_Paulo (UTC-03:00)',
+                    'permitirAdicionarArquivos': true, 'permitirImprimirEtiquetas': true,
+                    'compartilharPesquisa': false, 'compartilharSolicitacao': false,
+                    'substituirFotolabel': false,
+                    'podeSolicitarCaixa': false, 'podeSolicitarDocumento': true,
+                    'podeSolicitarCaixaPorDocumento': false,
+                    'camposOSDocumento': 'Nome Paciente;CPF;Prontuário', 'camposOSCaixa': 'Lote;Ano;Unidade',
+                    'enviarNotificacaoOS': true, 'obrigatoriedadeDestinatario': true,
+                    'finalizarOS2Fatores': true, 'mostrarDadosTransporteOS': false,
+                    'disponibilizarRegistroFotografico': false, 'inserirVinculados': true,
+                    'formatoAssinaturaOS': 'Projeto',
+                    'controlarVencimentoCheck': true, 'prazoDevolucao': '14',
+                    'diaEnvioNotificacao': '1', 'tempoBloqueioUsuario': '30',
+                    'alteracaoPrazoCheck': false, 'alterarEtapaOSRecolhimento': false,
+                    'emailComunicacoes': 'saude@municipio.gov.br',
+                    'emailNotificacaoLote': 'lotes.saude@municipio.gov.br',
+                    'emailGestaoDocumental': 'gestao.saude@municipio.gov.br',
+                    'emailDigitalizacao': 'digitalizacao.saude@municipio.gov.br',
+                    'emailNovosArquivos': 'novos.saude@municipio.gov.br',
+                    'verIntegracoes': true, 'compartilharPacotesPreservacao': true,
+                    'notificarSlaNormalCheck': true,
+                    'emailSlaNormal': 'saude@municipio.gov.br',
+                    'tempoAvisoSlaNormal': '48;24;12',
+                    'notificarSlaUrgenteCheck': true,
+                    'emailSlaUrgente': 'saude.urgente@municipio.gov.br',
+                    'tempoAvisoSlaUrgente': '12;4;2', 'mostrarDadosTransporteCheck': false,
+                    'enviarRelatorioAnual': true, 'eliminarDadosExpurgo': false,
+                    'emailRelatorioExpurgo': 'expurgo.saude@municipio.gov.br',
+                    'notificarPrazoGuardaCheck': true, 'intervaloAlerta': '180;90;30',
+                    'destinatariosAlerta': 'gestao.saude@municipio.gov.br',
+                    'notificarExpurgoCheck': true, 'periodicidadeExpurgo': '90', 'periodoExpurgo': 'anual',
+                    'armazenarDoczFileService': true, 'permitirDigitalizar': true,
+                    'realizarChancela': true, 'realizarChancelaLote': true,
+                    'marcaDaguaChancela': true, 'assinaturaCertificado': true,
+                    'assinaturaCertificaLote': false, 'permitirUploadAPI': true,
+                    'substituirArquivoAPI': false, 'converterPDFA': true,
+                    'etapaDocumentalEntradaPDFA': 'Aprovado',
+                    'etapaDocumentalSaidaPDFA': 'Finalizado',
+                    'habilitarEnvioSEI': false, 'visualizarVersoes': true,
+                    'liberarAvaliacaoSemTipologia': false, 'arquivarDesarquivar': false,
+                    'permitirRelacionamentos': true, 'restringirPorDepartamento': true,
+                    'exigirJustificativaAlterar': true, 'alteracaoSomenteAutorCheck': false,
+                    'inativarArquivosCheck': true, 'etapaDocumentalInativar': 'Arquivado',
+                    'habilitarMetadadosCheck': true,
+                    'autorMetadado': 'Gestão Documental — Saúde',
+                    'localDigitalizacao': 'Hospital Central',
+                    'responsavelDigitalizacao': 'Equipe de Digitalização Saúde',
+                    'localProducao': 'Unidades Básicas de Saúde',
+                    'pesqCampoLocalizacao': true, 'pesqCampoStatus': true, 'pesqCampoDescricao': true,
+                    'pesqCampoDepartamento': true, 'pesqCampoTipoObjeto': true, 'pesqCampoUsuario': true,
+                    'pesqCampoNomePaciente': true, 'pesqCampoNumeroRG': true,
+                    'pesqCampoNumeroProntuario': true, 'pesqCampoCPF': true,
+                    'pesqCampoDataNascimento': true, 'pesqCampoNomeMae': true,
+                    'pesqCampoNomePai': true, 'pesqCampoDataObito': true,
+                    'pesqCampoDataProducao': true, 'pesqCampoTipoDocumental': true,
+                    'pesqCampoSigiloAssociado': true
+                },
+                'modelo-rh': {
+                    'ativoCheck': true, 'principalCheck': false,
+                    'descricao': 'Projeto para guarda de dossiês funcionais e documentação de servidores.',
+                    'limiteSolicitacaoDiaria': '60', 'limiteIndexacaoLote': '250',
+                    'fusoHorario': 'America/Sao_Paulo (UTC-03:00)',
+                    'permitirAdicionarArquivos': true, 'permitirImprimirEtiquetas': true,
+                    'compartilharPesquisa': true, 'compartilharSolicitacao': true,
+                    'substituirFotolabel': true,
+                    'podeSolicitarCaixa': true, 'podeSolicitarDocumento': true,
+                    'podeSolicitarCaixaPorDocumento': true,
+                    'camposOSDocumento': 'Matrícula;Nome;CPF', 'camposOSCaixa': 'Lote;Caixa;Ano',
+                    'enviarNotificacaoOS': true, 'obrigatoriedadeDestinatario': false,
+                    'finalizarOS2Fatores': true, 'mostrarDadosTransporteOS': true,
+                    'disponibilizarRegistroFotografico': false, 'inserirVinculados': true,
+                    'formatoAssinaturaOS': 'Ambas (Cliente + Projeto)',
+                    'controlarVencimentoCheck': true, 'prazoDevolucao': '30',
+                    'diaEnvioNotificacao': '15', 'tempoBloqueioUsuario': '60',
+                    'alteracaoPrazoCheck': true, 'alterarEtapaOSRecolhimento': true,
+                    'etapaDocumentalPosOSRecolhimento': 'Finalizado',
+                    'emailComunicacoes': 'rh@municipio.gov.br',
+                    'emailNotificacaoLote': 'lotes.rh@municipio.gov.br',
+                    'emailGestaoDocumental': 'gestao.rh@municipio.gov.br',
+                    'emailDigitalizacao': 'digitalizacao.rh@municipio.gov.br',
+                    'emailNovosArquivos': 'novos.rh@municipio.gov.br',
+                    'verIntegracoes': true, 'compartilharPacotesPreservacao': true,
+                    'notificarSlaNormalCheck': true,
+                    'emailSlaNormal': 'rh@municipio.gov.br',
+                    'tempoAvisoSlaNormal': '48;24;12',
+                    'notificarSlaUrgenteCheck': false, 'mostrarDadosTransporteCheck': true,
+                    'enviarRelatorioAnual': true, 'eliminarDadosExpurgo': true,
+                    'emailRelatorioExpurgo': 'expurgo.rh@municipio.gov.br',
+                    'notificarPrazoGuardaCheck': true, 'intervaloAlerta': '90;60;30',
+                    'destinatariosAlerta': 'rh@municipio.gov.br;gestao.rh@municipio.gov.br',
+                    'notificarExpurgoCheck': true, 'periodicidadeExpurgo': '30', 'periodoExpurgo': 'anual',
+                    'armazenarDoczFileService': true, 'permitirDigitalizar': true,
+                    'realizarChancela': true, 'realizarChancelaLote': true,
+                    'marcaDaguaChancela': true, 'assinaturaCertificado': true,
+                    'assinaturaCertificaLote': true, 'permitirUploadAPI': true,
+                    'substituirArquivoAPI': true, 'converterPDFA': true,
+                    'etapaDocumentalEntradaPDFA': 'Aprovado',
+                    'etapaDocumentalSaidaPDFA': 'Arquivado',
+                    'habilitarEnvioSEI': true, 'visualizarVersoes': true,
+                    'liberarAvaliacaoSemTipologia': false, 'arquivarDesarquivar': true,
+                    'permitirRelacionamentos': true, 'restringirPorDepartamento': true,
+                    'exigirJustificativaAlterar': true, 'alteracaoSomenteAutorCheck': true,
+                    'etapaDocumentalAutor': 'Finalizado', 'inativarArquivosCheck': true,
+                    'etapaDocumentalInativar': 'Arquivado',
+                    'habilitarMetadadosCheck': true,
+                    'autorMetadado': 'Secretaria de Recursos Humanos',
+                    'localDigitalizacao': 'Sede RH',
+                    'responsavelDigitalizacao': 'Equipe RH',
+                    'localProducao': 'Departamento de Pessoal',
+                    'pesqCampoLocalizacao': true, 'pesqCampoStatus': true, 'pesqCampoServico': true,
+                    'pesqCampoDescricao': true, 'pesqCampoDepartamento': true, 'pesqCampoTipoObjeto': true,
+                    'pesqCampoUsuario': true, 'pesqCampoMatricula': true,
+                    'pesqCampoNomeColaborador': true, 'pesqCampoCPF': true,
+                    'pesqCampoDataNascimento': true, 'pesqCampoDepartamentoLotacao': true,
+                    'pesqCampoCentroCustos': true, 'pesqCampoDataInicio': true, 'pesqCampoTipoDocumental': true
+                },
+                'modelo-juridico': {
+                    'ativoCheck': true, 'principalCheck': false,
+                    'descricao': 'Projeto para guarda de processos judiciais e administrativos da Procuradoria.',
+                    'limiteSolicitacaoDiaria': '40', 'limiteIndexacaoLote': '150',
+                    'fusoHorario': 'America/Sao_Paulo (UTC-03:00)',
+                    'permitirAdicionarArquivos': true, 'permitirImprimirEtiquetas': true,
+                    'compartilharPesquisa': false, 'compartilharSolicitacao': true,
+                    'podeSolicitarCaixa': true, 'podeSolicitarDocumento': true,
+                    'podeSolicitarCaixaPorDocumento': true,
+                    'camposOSDocumento': 'Nº Processo;Parte;Assunto', 'camposOSCaixa': 'Lote;Ano;Vara',
+                    'enviarNotificacaoOS': true, 'obrigatoriedadeDestinatario': true,
+                    'finalizarOS2Fatores': true, 'mostrarDadosTransporteOS': true,
+                    'disponibilizarRegistroFotografico': false, 'inserirVinculados': true,
+                    'formatoAssinaturaOS': 'Ambas (Cliente + Projeto)',
+                    'controlarVencimentoCheck': true, 'prazoDevolucao': '60',
+                    'diaEnvioNotificacao': '20', 'tempoBloqueioUsuario': '90',
+                    'alteracaoPrazoCheck': true, 'alterarEtapaOSRecolhimento': true,
+                    'etapaDocumentalPosOSRecolhimento': 'Aprovado',
+                    'emailComunicacoes': 'pgm@municipio.gov.br',
+                    'emailNotificacaoLote': 'lotes.pgm@municipio.gov.br',
+                    'emailGestaoDocumental': 'gestao.pgm@municipio.gov.br',
+                    'emailDigitalizacao': 'digitalizacao.pgm@municipio.gov.br',
+                    'emailNovosArquivos': 'novos.pgm@municipio.gov.br',
+                    'verIntegracoes': true, 'compartilharPacotesPreservacao': true,
+                    'notificarSlaNormalCheck': true,
+                    'emailSlaNormal': 'pgm@municipio.gov.br',
+                    'tempoAvisoSlaNormal': '96;72;48',
+                    'notificarSlaUrgenteCheck': true,
+                    'emailSlaUrgente': 'pgm.urgente@municipio.gov.br',
+                    'tempoAvisoSlaUrgente': '48;24;8', 'mostrarDadosTransporteCheck': true,
+                    'enviarRelatorioAnual': true, 'eliminarDadosExpurgo': false,
+                    'emailRelatorioExpurgo': 'expurgo.pgm@municipio.gov.br',
+                    'notificarPrazoGuardaCheck': true, 'intervaloAlerta': '365;180;90',
+                    'destinatariosAlerta': 'gestao.pgm@municipio.gov.br;pgm@municipio.gov.br',
+                    'notificarExpurgoCheck': true, 'periodicidadeExpurgo': '90', 'periodoExpurgo': 'anual',
+                    'armazenarDoczFileService': true, 'permitirDigitalizar': true,
+                    'realizarChancela': true, 'realizarChancelaLote': true,
+                    'marcaDaguaChancela': true, 'assinaturaCertificado': true,
+                    'assinaturaCertificaLote': true, 'permitirUploadAPI': true,
+                    'substituirArquivoAPI': true, 'converterPDFA': true,
+                    'etapaDocumentalEntradaPDFA': 'Aprovado',
+                    'etapaDocumentalSaidaPDFA': 'Finalizado',
+                    'habilitarEnvioSEI': true, 'visualizarVersoes': true,
+                    'liberarAvaliacaoSemTipologia': false, 'arquivarDesarquivar': true,
+                    'permitirRelacionamentos': true, 'restringirPorDepartamento': true,
+                    'exigirJustificativaAlterar': true, 'alteracaoSomenteAutorCheck': true,
+                    'etapaDocumentalAutor': 'Finalizado', 'inativarArquivosCheck': true,
+                    'etapaDocumentalInativar': 'Arquivado',
+                    'habilitarMetadadosCheck': true,
+                    'autorMetadado': 'Procuradoria Geral do Município',
+                    'localDigitalizacao': 'Sede PGM',
+                    'responsavelDigitalizacao': 'Equipe PGM',
+                    'localProducao': 'Gabinete do Procurador',
+                    'pesqCampoLocalizacao': true, 'pesqCampoStatus': true, 'pesqCampoServico': true,
+                    'pesqCampoDescricao': true, 'pesqCampoDepartamento': true, 'pesqCampoTipoObjeto': true,
+                    'pesqCampoLacre01': true, 'pesqCampoNumeroUltimaSolicitacao': true,
+                    'pesqCampoUsuario': true, 'pesqCampoNumeroDossie': true,
+                    'pesqCampoClasse': true, 'pesqCampoSubclasse': true,
+                    'pesqCampoGrupo': true, 'pesqCampoSubgrupo': true,
+                    'pesqCampoDataEvento': true, 'pesqCampoDataProducao': true,
+                    'pesqCampoDataDestinacao': true, 'pesqCampoResponsavel': true,
+                    'pesqCampoContratante': true, 'pesqCampoDestino': true, 'pesqCampoObservacoes': true
+                },
+                'modelo-fiscal': {
+                    'ativoCheck': true, 'principalCheck': false,
+                    'descricao': 'Projeto para guarda de notas fiscais, guias e documentos fiscais municipais.',
+                    'limiteSolicitacaoDiaria': '120', 'limiteIndexacaoLote': '600',
+                    'fusoHorario': 'America/Sao_Paulo (UTC-03:00)',
+                    'permitirAdicionarArquivos': true, 'permitirImprimirEtiquetas': true,
+                    'compartilharPesquisa': true, 'compartilharSolicitacao': true,
+                    'podeSolicitarCaixa': true, 'podeSolicitarDocumento': true,
+                    'podeSolicitarCaixaPorDocumento': false,
+                    'camposOSDocumento': 'Nº Nota;CNPJ;Competência', 'camposOSCaixa': 'Lote;Ano;Inscrição',
+                    'enviarNotificacaoOS': true, 'obrigatoriedadeDestinatario': false,
+                    'finalizarOS2Fatores': false, 'mostrarDadosTransporteOS': true,
+                    'disponibilizarRegistroFotografico': true, 'inserirVinculados': true,
+                    'formatoAssinaturaOS': 'Cliente',
+                    'controlarVencimentoCheck': true, 'prazoDevolucao': '90',
+                    'diaEnvioNotificacao': '25', 'tempoBloqueioUsuario': '90',
+                    'alteracaoPrazoCheck': false, 'alterarEtapaOSRecolhimento': false,
+                    'emailComunicacoes': 'fazenda@municipio.gov.br',
+                    'emailNotificacaoLote': 'lotes.fazenda@municipio.gov.br',
+                    'emailGestaoDocumental': 'gestao.fazenda@municipio.gov.br',
+                    'emailDigitalizacao': 'digitalizacao.fazenda@municipio.gov.br',
+                    'emailNovosArquivos': 'novos.fazenda@municipio.gov.br',
+                    'verIntegracoes': true, 'compartilharPacotesPreservacao': true,
+                    'notificarSlaNormalCheck': true,
+                    'emailSlaNormal': 'fazenda@municipio.gov.br',
+                    'tempoAvisoSlaNormal': '72;48;24',
+                    'notificarSlaUrgenteCheck': true,
+                    'emailSlaUrgente': 'fazenda.urgente@municipio.gov.br',
+                    'tempoAvisoSlaUrgente': '24;12;4', 'mostrarDadosTransporteCheck': true,
+                    'enviarRelatorioAnual': true, 'eliminarDadosExpurgo': true,
+                    'emailRelatorioExpurgo': 'expurgo.fazenda@municipio.gov.br',
+                    'notificarPrazoGuardaCheck': true, 'intervaloAlerta': '180;90;30',
+                    'destinatariosAlerta': 'fazenda@municipio.gov.br;gestao.fazenda@municipio.gov.br',
+                    'notificarExpurgoCheck': true, 'periodicidadeExpurgo': '60', 'periodoExpurgo': 'anual',
+                    'armazenarDoczFileService': true, 'permitirDigitalizar': true,
+                    'realizarChancela': true, 'realizarChancelaLote': true,
+                    'marcaDaguaChancela': true, 'assinaturaCertificado': true,
+                    'assinaturaCertificaLote': true, 'permitirUploadAPI': true,
+                    'substituirArquivoAPI': true, 'converterPDFA': true,
+                    'etapaDocumentalEntradaPDFA': 'Aprovado',
+                    'etapaDocumentalSaidaPDFA': 'Finalizado',
+                    'habilitarEnvioSEI': true, 'visualizarVersoes': true,
+                    'liberarAvaliacaoSemTipologia': true, 'arquivarDesarquivar': true,
+                    'permitirRelacionamentos': true, 'restringirPorDepartamento': true,
+                    'exigirJustificativaAlterar': true, 'alteracaoSomenteAutorCheck': false,
+                    'inativarArquivosCheck': true, 'etapaDocumentalInativar': 'Cancelado',
+                    'habilitarMetadadosCheck': true,
+                    'autorMetadado': 'Secretaria da Fazenda',
+                    'localDigitalizacao': 'Sede Fazenda',
+                    'responsavelDigitalizacao': 'Equipe de Digitalização Fiscal',
+                    'localProducao': 'Departamento de Tributos',
+                    'pesqCampoLocalizacao': true, 'pesqCampoStatus': true, 'pesqCampoServico': true,
+                    'pesqCampoDescricao': true, 'pesqCampoDepartamento': true, 'pesqCampoTipoObjeto': true,
+                    'pesqCampoLacre01': true, 'pesqCampoLacre02': true,
+                    'pesqCampoNumeroUltimaSolicitacao': true, 'pesqCampoUsuario': true,
+                    'pesqCampoClassificacao': true, 'pesqCampoPaginas': true,
+                    'pesqCampoVolume': true, 'pesqCampoDataInicio': true,
+                    'pesqCampoDataProducao': true, 'pesqCampoTipoDocumental': true,
+                    'pesqCampoDataEvento': true, 'pesqCampoDestinacaoFinal': true,
+                    'pesqCampoCentroCustos': true
+                }
+            };
+            return presets[modeloId] || null;
+        }
+
+        // ============================================
+        // WRAPPERS
+        // ============================================
+        function toggleParamWrapper(header) { }
+
+        function updateParamWrapperState(wrapperId, isChecked) {
+            var wrapper = document.getElementById(wrapperId);
+            if (!wrapper) return;
+
+            var body = wrapper.querySelector('.param-card-body');
+            var icon = wrapper.querySelector('.toggle-icon');
+
+            if (isChecked) {
+                wrapper.classList.add('active');
+                if (body) body.classList.add('visible');
+                if (icon) icon.classList.add('open');
+            } else {
+                wrapper.classList.remove('active');
+                if (body) body.classList.remove('visible');
+                if (icon) icon.classList.remove('open');
+            }
+        }
+
+        function toggleControlarVencimento() {
+            updateParamWrapperState('wrapperControlarVencimento', document.getElementById('controlarVencimentoCheck').checked);
+        }
+        function toggleSlaNormal() {
+            updateParamWrapperState('wrapperSlaNormal', document.getElementById('notificarSlaNormalCheck').checked);
+        }
+        function toggleSlaUrgente() {
+            updateParamWrapperState('wrapperSlaUrgente', document.getElementById('notificarSlaUrgenteCheck').checked);
+        }
+        function togglePrazoGuarda() {
+            updateParamWrapperState('wrapperPrazoGuarda', document.getElementById('notificarPrazoGuardaCheck').checked);
+        }
+        function toggleExpurgo() {
+            updateParamWrapperState('wrapperExpurgo', document.getElementById('notificarExpurgoCheck').checked);
+        }
+        function toggleUploadAPI() {
+            updateParamWrapperState('wrapperUploadAPI', document.getElementById('permitirUploadAPI').checked);
+        }
+        function togglePDFA() {
+            updateParamWrapperState('wrapperPDFA', document.getElementById('converterPDFA').checked);
+        }
+        function toggleEtapaOSRecolhimento() {
+            updateParamWrapperState('wrapperEtapaOSRecolhimento', document.getElementById('alterarEtapaOSRecolhimento').checked);
+        }
+        function toggleEtapaDocumentalAutor() {
+            updateParamWrapperState('wrapperAlteracaoAutor', document.getElementById('alteracaoSomenteAutorCheck').checked);
+        }
+        function toggleEtapaDocumentalInativar() {
+            updateParamWrapperState('wrapperInativarArquivos', document.getElementById('inativarArquivosCheck').checked);
+        }
+        function toggleMetadados() {
+            updateParamWrapperState('wrapperMetadados', document.getElementById('habilitarMetadadosCheck').checked);
+        }
+
+        function toggleAlternativos() {
+            var chk = document.getElementById('habilitarAlternativos');
+            var div = document.getElementById('camposAlternativos');
+            if (chk.checked) {
+                div.classList.add('visible');
+            } else {
+                div.classList.remove('visible');
+                document.getElementById('idAlternativo').value = '';
+                document.getElementById('nomeAlternativo').value = '';
+                document.getElementById('codigoGuardaAlternativo').value = '';
+            }
+        }
+
+        function togglePesquisaCard() {
+            var header = document.getElementById('pesquisaToggle');
+            var body = document.getElementById('pesquisaCardBody');
+            if (!header || !body) return;
+
+            var isOpen = header.getAttribute('aria-expanded') === 'true';
+            if (isOpen) {
+                fecharPesquisaCard();
+            } else {
+                header.setAttribute('aria-expanded', 'true');
+                body.classList.add('visible');
+            }
+        }
+
+        function fecharPesquisaCard() {
+            var header = document.getElementById('pesquisaToggle');
+            var body = document.getElementById('pesquisaCardBody');
+            if (header) header.setAttribute('aria-expanded', 'false');
+            if (body) body.classList.remove('visible');
+        }
+
+        function salvarPersonalizacaoPesquisa() {
+            fecharPesquisaCard();
+            doczAlert('Personalização da pesquisa salva com sucesso!', 'Sucesso', 'success');
+        }
+
+        function fixarColunasCardsExpansiveis() {
+            document.querySelectorAll('.param-card-body .checkbox-grid').forEach(function (grid) {
+                var itens = grid.querySelectorAll(':scope > .checkbox-item');
+                grid.classList.toggle('cols-1', itens.length === 1);
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            renderSubtabs('aba1');
+
+            document.querySelectorAll('.tab-link').forEach(function (tab) {
+                var pane = document.getElementById(tab.getAttribute('data-tab'));
+                if (pane) {
+                    tab.setAttribute('aria-controls', pane.id);
+                    pane.setAttribute('role', 'tabpanel');
+                    pane.setAttribute('aria-labelledby', tab.id || (tab.id = 'tab-' + pane.id));
+                }
+            });
+
+            document.querySelectorAll('label:not([for])').forEach(function (label, index) {
+                var control = label.querySelector('input, select, textarea') ||
+                    (label.parentElement && label.parentElement.querySelector('input, select, textarea'));
+                if (!control) return;
+                if (!control.id) control.id = 'docz-field-' + (index + 1);
+                label.htmlFor = control.id;
+            });
+
+            document.querySelectorAll('.param-wrapper').forEach(function (wrapper) {
+                var checkbox = wrapper.querySelector('.checkbox-item input[type="checkbox"]');
+                if (checkbox && checkbox.checked) {
+                    var body = wrapper.querySelector('.param-card-body');
+                    var icon = wrapper.querySelector('.toggle-icon');
+                    wrapper.classList.add('active');
+                    if (body) body.classList.add('visible');
+                    if (icon) icon.classList.add('open');
+                }
+            });
+
+            fixarColunasCardsExpansiveis();
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                document.getElementById('tabSearch').focus();
+                document.getElementById('tabSearch').select();
+            }
+        });
+
+        atualizarListaArmazens();
+    </script>
+</body>
+
+</html>
